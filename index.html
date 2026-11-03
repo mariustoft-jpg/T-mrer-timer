@@ -2,388 +2,1401 @@
 <html lang="da">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tømrer Timer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
-    <!-- SheetJS til Excel-eksport direkte i browseren -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --card-alt: #0b1120;
+            --border: #334155;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --amber: #f59e0b;
+            --amber-hover: #d97706;
+            --amber-soft: rgba(245, 158, 11, 0.14);
+            --green: #10b981;
+            --green-hover: #059669;
+            --red: #ef4444;
+            --blue: #3b82f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 90px;
+        }
+
+        /* TOPBAR */
+        .topbar {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            padding: 12px 16px;
+        }
+        .topbar-inner {
+            max-width: 520px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--amber);
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+        }
+        .brand-title {
+            font-weight: 800;
+            font-size: 17px;
+            letter-spacing: -0.3px;
+        }
+        .brand-sub {
+            font-size: 11px;
+            color: var(--muted);
+        }
+        .period-pill {
+            background: var(--amber-soft);
+            color: var(--amber);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* TABS */
+        .tabs-wrap {
+            max-width: 520px;
+            margin: 12px auto 0;
+            padding: 0 14px;
+        }
+        .tabs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            background: var(--card);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            gap: 4px;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-weight: 700;
+            font-size: 13px;
+            padding: 10px 6px;
+            border-radius: 9px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .tab-btn.active {
+            background: var(--amber);
+            color: #0f172a;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
+        }
+
+        /* CONTAINER & CARDS */
+        .container {
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .card-title {
+            font-size: 15px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        /* DATO & NORM STATUSBAR */
+        .date-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .date-nav-btn {
+            background: var(--card-alt);
+            border: 1px solid var(--border);
+            color: var(--text);
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .date-input {
+            flex: 1;
+            background: var(--card-alt);
+            border: 1px solid var(--border);
+            color: var(--text);
+            height: 42px;
+            border-radius: 10px;
+            padding: 0 12px;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+        }
+        .norm-box {
+            margin-top: 12px;
+            background: var(--card-alt);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+        }
+        .norm-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        .norm-day-name {
+            font-weight: 800;
+            color: var(--amber);
+        }
+        .norm-stats {
+            font-weight: 700;
+        }
+        .progress-bg {
+            height: 8px;
+            background: #1e293b;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--amber);
+            width: 0%;
+            transition: width 0.25s ease;
+        }
+        .progress-fill.done {
+            background: var(--green);
+        }
+
+        /* STED- OG OPGAVEVÆLGER */
+        .selected-place-banner {
+            background: var(--card-alt);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 11px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .selected-place-banner.active {
+            border-color: var(--amber);
+            background: var(--amber-soft);
+        }
+        .selected-place-name {
+            font-weight: 800;
+            font-size: 15px;
+        }
+        .search-wrap {
+            position: relative;
+        }
+        .input-text {
+            width: 100%;
+            background: var(--card-alt);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        .input-text:focus {
+            outline: none;
+            border-color: var(--amber);
+        }
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #0b1120;
+            border: 1px solid var(--amber);
+            border-radius: 12px;
+            margin-top: 4px;
+            max-height: 210px;
+            overflow-y: auto;
+            z-index: 30;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+        }
+        .dropdown-item {
+            padding: 11px 14px;
+            border-bottom: 1px solid #1e293b;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .dropdown-item:hover, .dropdown-item:active {
+            background: #1e293b;
+        }
+        .dropdown-create {
+            color: var(--amber);
+            font-weight: 800;
+        }
+        .chips-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        .chip {
+            background: var(--card-alt);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 7px 11px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .chip.active {
+            background: var(--amber);
+            color: #0f172a;
+            border-color: var(--amber);
+            font-weight: 800;
+        }
+
+        /* TIDSVÆLGER (15, 30, 45 MIN & FULDE DAGE) */
+        .time-display-box {
+            background: var(--card-alt);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .time-main {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--amber);
+            line-height: 1.1;
+        }
+        .time-decimal {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+        .reset-btn {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 8px 12px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .norm-quick-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .norm-btn {
+            background: var(--amber-soft);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            color: var(--amber);
+            padding: 11px 8px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .norm-btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 7px;
+            margin-bottom: 8px;
+        }
+        .time-btn {
+            background: var(--card-alt);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px 4px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            transition: transform 0.08s;
+        }
+        .time-btn:active {
+            transform: scale(0.95);
+            border-color: var(--amber);
+        }
+        .time-btn.highlight {
+            background: #273549;
+            border-color: #475569;
+            color: var(--amber);
+        }
+
+        /* KATEGORI & KØRSEL */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .save-btn {
+            width: 100%;
+            margin-top: 14px;
+            background: var(--amber);
+            color: #0f172a;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+        }
+        .save-btn:active {
+            transform: scale(0.99);
+            background: var(--amber-hover);
+        }
+
+        /* LISTE OVER REGISTRERINGER */
+        .entry-item {
+            background: var(--card-alt);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .entry-place {
+            font-weight: 800;
+            font-size: 14px;
+        }
+        .entry-meta {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+        .entry-note {
+            font-size: 12px;
+            color: #cbd5e1;
+            font-style: italic;
+            margin-top: 4px;
+        }
+        .entry-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .entry-hours-badge {
+            background: var(--amber-soft);
+            color: var(--amber);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            padding: 5px 9px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+        .del-btn {
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px 6px;
+        }
+        .del-btn:hover {
+            color: var(--red);
+        }
+
+        /* 14-DAGE & EXCEL SEKTION */
+        .period-selector {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-alt);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin-bottom: 14px;
+        }
+        .period-title {
+            font-weight: 800;
+            font-size: 14px;
+            text-align: center;
+        }
+        .period-sub {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: center;
+            margin-top: 2px;
+        }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .kpi-card {
+            background: var(--card-alt);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+        }
+        .kpi-val {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--text);
+        }
+        .kpi-lbl {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+        .excel-btn {
+            width: 100%;
+            background: var(--green);
+            color: #052e16;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+        }
+        .secondary-btn {
+            width: 100%;
+            background: var(--card-alt);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .day-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 9px 10px;
+            border-bottom: 1px solid #1e293b;
+            font-size: 13px;
+        }
+        .day-row:last-child {
+            border-bottom: none;
+        }
+        .day-row.friday-even {
+            background: rgba(16, 185, 129, 0.08);
+            border-left: 3px solid var(--green);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10b981;
+            color: #052e16;
+            padding: 10px 18px;
+            border-radius: 999px;
+            font-weight: 800;
+            font-size: 13px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            z-index: 99;
+        }
+    </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen pb-20 select-none">
-    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 px-4 py-3 flex justify-between items-center shadow-md">
-        <div class="flex items-center space-x-2">
-            <i class="ph ph-hammer text-amber-500 text-2xl"></i>
-            <h1 class="font-bold text-lg tracking-wide">Tømrer Timer</h1>
-        </div>
-        <div id="active-location-badge" class="text-xs bg-slate-700 text-amber-400 px-2.5 py-1 rounded-full border border-slate-600 truncate max-w-[180px]">
-            Ingen plads valgt
+<body>
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+        <div class="topbar-inner">
+            <div class="brand">
+                <div class="brand-logo">T</div>
+                <div>
+                    <div class="brand-title">Tømrer Timer</div>
+                    <div class="brand-sub">Man-Tir 8t • Ons-Fre 7t (37t/uge)</div>
+                </div>
+            </div>
+            <div id="top-period-badge" class="period-pill">Uge --</div>
         </div>
     </header>
 
-    <main class="max-w-md mx-auto p-4 space-y-4">
-        <!-- REGISTRERING FORM -->
-        <section class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-lg space-y-4">
-            <h2 class="font-semibold text-slate-200 flex items-center gap-2">
-                <i class="ph ph-plus-circle text-amber-500"></i> Registrer Timer
-            </h2>
+    <!-- NAVIGATION TABS -->
+    <div class="tabs-wrap">
+        <div class="tabs">
+            <button type="button" id="tab-btn-reg" class="tab-btn active" onclick="switchTab('reg')">Registrer</button>
+            <button type="button" id="tab-btn-period" class="tab-btn" onclick="switchTab('period')">14-Dage & Excel</button>
+            <button type="button" id="tab-btn-places" class="tab-btn" onclick="switchTab('places')">Steder</button>
+        </div>
+    </div>
 
-            <!-- Dato -->
-            <div>
-                <label class="block text-xs text-slate-400 mb-1">Dato</label>
-                <input type="date" id="input-date" onchange="onDateChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-100 text-base focus:outline-none focus:border-amber-500">
-                <div id="norm-info" class="text-xs text-amber-400/90 mt-1 font-medium">Norm for dag: 8 timer</div>
+    <!-- FANE 1: REGISTRER TIMER -->
+    <main id="view-reg" class="container">
+        <!-- Dato og Dagens Norm -->
+        <section class="card">
+            <span class="label">Dato & Dagens Normtid</span>
+            <div class="date-row">
+                <button type="button" class="date-nav-btn" onclick="stepDate(-1)">‹</button>
+                <input type="date" id="reg-date" class="date-input" onchange="onDateChanged()">
+                <button type="button" class="date-nav-btn" onclick="stepDate(1)">›</button>
             </div>
-
-            <!-- Sted Vælger -->
-            <div>
-                <div class="flex justify-between items-center mb-1">
-                    <label class="text-xs text-slate-400">Byggeplads / Kunde</label>
-                    <button type="button" onclick="toggleNewLocationModal()" class="text-xs text-amber-400 hover:underline flex items-center gap-1 py-1">
-                        <i class="ph ph-plus font-bold"></i> Nyt sted
-                    </button>
+            <div class="norm-box">
+                <div class="norm-top">
+                    <span id="day-name-label" class="norm-day-name">Mandag (Norm: 8,00 t)</span>
+                    <span id="day-progress-text" class="norm-stats">0,00 / 8,00 t</span>
                 </div>
-                <div class="relative">
-                    <input type="text" id="location-search" placeholder="Søg eller vælg sted..." oninput="filterLocations()" onclick="showLocationDropdown()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-100 text-base focus:outline-none focus:border-amber-500">
-                    <div id="location-dropdown" class="hidden absolute left-0 right-0 top-full mt-1 bg-slate-900 border border-slate-700 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-30"></div>
-                </div>
-                <div id="quick-locations" class="flex flex-wrap gap-1.5 mt-2"></div>
-            </div>
-
-            <!-- Tids-vælger -->
-            <div>
-                <div class="flex justify-between items-center mb-1">
-                    <label class="text-xs text-slate-400">Tid / Varighed</label>
-                    <button type="button" onclick="fillRestOfDay()" class="text-xs text-amber-400 hover:underline py-1">Sæt rest af dag</button>
-                </div>
-                <div class="flex gap-2 mb-2">
-                    <input type="number" id="input-hours" placeholder="Timer" min="0" value="0" class="w-1/2 bg-slate-900 border border-slate-700 rounded-lg p-3 text-center text-xl font-bold focus:outline-none focus:border-amber-500">
-                    <input type="number" id="input-minutes" placeholder="Min" min="0" max="59" step="15" value="0" class="w-1/2 bg-slate-900 border border-slate-700 rounded-lg p-3 text-center text-xl font-bold focus:outline-none focus:border-amber-500">
-                </div>
-                <!-- Hurtig-knapper til minutter -->
-                <div class="grid grid-cols-4 gap-2">
-                    <button type="button" onclick="addMinutes(15)" class="bg-slate-700 hover:bg-slate-600 active:bg-slate-500 text-xs py-3 rounded-lg font-medium transition">+15 min</button>
-                    <button type="button" onclick="addMinutes(30)" class="bg-slate-700 hover:bg-slate-600 active:bg-slate-500 text-xs py-3 rounded-lg font-medium transition">+30 min</button>
-                    <button type="button" onclick="addMinutes(45)" class="bg-slate-700 hover:bg-slate-600 active:bg-slate-500 text-xs py-3 rounded-lg font-medium transition">+45 min</button>
-                    <button type="button" onclick="addHours(1)" class="bg-amber-600 hover:bg-amber-500 active:bg-amber-400 text-slate-950 text-xs py-3 rounded-lg font-bold transition">+1 time</button>
+                <div class="progress-bg">
+                    <div id="day-progress-bar" class="progress-fill"></div>
                 </div>
             </div>
+        </section>
 
-            <!-- Kategori & Kørsel -->
-            <div class="grid grid-cols-2 gap-2">
+        <!-- Sted / Byggeplads Vælger -->
+        <section class="card">
+            <div class="card-header">
+                <div class="card-title">1. Vælg Byggeplads / Sted</div>
+                <button type="button" onclick="switchTab('places')" style="background:none;border:none;color:var(--amber);font-size:12px;font-weight:700;cursor:pointer;">Alle steder ›</button>
+            </div>
+
+            <div id="selected-place-box" class="selected-place-banner">
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">Kategori</label>
-                    <select id="input-category" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-100 text-sm focus:outline-none focus:border-amber-500">
+                    <div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:700;">Valgt byggeplads</div>
+                    <div id="selected-place-text" class="selected-place-name">Ingen plads valgt endnu</div>
+                </div>
+                <span id="selected-place-star" style="color:var(--amber);font-size:18px;"></span>
+            </div>
+
+            <div class="search-wrap">
+                <input type="text" id="place-search" class="input-text" placeholder="Søg sted eller skriv nyt navn her..." oninput="onSearchInput()" onfocus="onSearchInput()">
+                <div id="place-dropdown" class="dropdown hidden"></div>
+            </div>
+
+            <div style="margin-top:10px;font-size:11px;color:var(--muted);font-weight:700;">★ Favoritter & Seneste steder:</div>
+            <div id="quick-chips" class="chips-wrap"></div>
+        </section>
+
+        <!-- Tid / Minutter / Fuld dag -->
+        <section class="card">
+            <div class="card-header">
+                <div class="card-title">2. Vælg Tid på Pladsen</div>
+            </div>
+
+            <div class="time-display-box">
+                <div>
+                    <div id="time-pretty" class="time-main">0 t 00 min</div>
+                    <div id="time-decimal" class="time-decimal">0,00 decimaltimer til løn</div>
+                </div>
+                <button type="button" class="reset-btn" onclick="setMinutes(0)">Nulstil</button>
+            </div>
+
+            <!-- Hurtige Fuld-dag & Rest-knapper -->
+            <div class="norm-quick-row">
+                <button type="button" id="btn-full-day" class="norm-btn" onclick="setFullDayNorm()">Sæt Fuld Dag (8t)</button>
+                <button type="button" id="btn-rest-day" class="norm-btn" onclick="setRestOfDayNorm()">Rest af dag (8t)</button>
+            </div>
+
+            <!-- + Minutter og + Timer -->
+            <span class="label" style="margin-top:10px;">Læg tid til (+15, +30, +45 min / timer)</span>
+            <div class="btn-grid-4">
+                <button type="button" class="time-btn highlight" onclick="addMinutes(15)">+15 min</button>
+                <button type="button" class="time-btn highlight" onclick="addMinutes(30)">+30 min</button>
+                <button type="button" class="time-btn highlight" onclick="addMinutes(45)">+45 min</button>
+                <button type="button" class="time-btn highlight" onclick="addMinutes(60)">+1 time</button>
+            </div>
+            <div class="btn-grid-4">
+                <button type="button" class="time-btn" onclick="addMinutes(120)">+2 timer</button>
+                <button type="button" class="time-btn" onclick="addMinutes(240)">+4 timer</button>
+                <button type="button" class="time-btn" onclick="setMinutes(420)">7 timer</button>
+                <button type="button" class="time-btn" onclick="setMinutes(480)">8 timer</button>
+            </div>
+
+            <!-- Kategori, Kørsel & Note -->
+            <div class="grid-2">
+                <div>
+                    <span class="label">Opgavetype</span>
+                    <select id="reg-category" class="input-text">
                         <option value="Tømrerarbejde">Tømrerarbejde</option>
                         <option value="Tagarbejde">Tagarbejde</option>
                         <option value="Vinduer / Døre">Vinduer / Døre</option>
                         <option value="Troldtekt / Loft">Troldtekt / Loft</option>
-                        <option value="Materialer / Indkøb">Materialer / Indkøb</option>
-                        <option value="Andet">Andet</option>
+                        <option value="Beklædning / Gips">Beklædning / Gips</option>
+                        <option value="Materialer / Trælast">Materialer / Trælast</option>
+                        <option value="Værksted / Oprydning">Værksted / Oprydning</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">Kørsel (km)</label>
-                    <input type="number" id="input-km" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-100 text-sm focus:outline-none focus:border-amber-500">
+                    <span class="label">Kørsel (km)</span>
+                    <input type="number" id="reg-km" class="input-text" placeholder="0" min="0">
                 </div>
             </div>
 
-            <!-- Note -->
-            <div>
-                <label class="block text-xs text-slate-400 mb-1">Bemærkning (valgfri)</label>
-                <input type="text" id="input-note" placeholder="F.x. montering af lofter..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-100 text-sm focus:outline-none focus:border-amber-500">
+            <div style="margin-top:10px;">
+                <span class="label">Bemærkning (valgfri)</span>
+                <input type="text" id="reg-note" class="input-text" placeholder="F.x. Montering af Troldtekt, hentet lægter...">
             </div>
 
-            <button type="button" onclick="saveTimeEntry()" class="w-full bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-base">
-                <i class="ph ph-check-circle text-2xl"></i> Gem Timer
-            </button>
+            <button type="button" class="save-btn" onclick="saveEntry()">✓ Gem Timer på Stedet</button>
         </section>
 
-        <!-- OVERSIGT & LØN -->
-        <section class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-lg space-y-3">
-            <div class="flex justify-between items-center">
-                <h2 class="font-semibold text-slate-200 flex items-center gap-2">
-                    <i class="ph ph-list-dashes text-amber-500"></i> Oversigt & Løn
-                </h2>
-                <div class="text-xs text-slate-300 bg-slate-900 px-2.5 py-1 rounded border border-slate-700 font-bold" id="total-summary-hours">0,0 t</div>
+        <!-- Dagens Registreringer -->
+        <section class="card">
+            <div class="card-header">
+                <div class="card-title">Registreret på valgt dato</div>
+                <span id="day-entries-count" style="font-size:12px;color:var(--muted);">0 poster</span>
             </div>
-            
-            <div id="entries-list" class="space-y-2 max-h-64 overflow-y-auto pr-1">
-                <!-- Dynamisk indhold -->
-            </div>
-
-            <button type="button" onclick="downloadExcelExport()" class="w-full bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white text-sm font-bold py-3.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
-                <i class="ph ph-file-xls text-xl"></i> Download 14-dages regnskab (Excel)
-            </button>
-            <button type="button" onclick="copyPayrollSummary()" class="w-full bg-slate-700 hover:bg-slate-600 active:bg-slate-500 text-slate-100 text-xs font-medium py-2.5 rounded-lg border border-slate-600 transition flex items-center justify-center gap-2">
-                <i class="ph ph-copy"></i> Kopiér til SMS/Mail
-            </button>
+            <div id="day-entries-list"></div>
         </section>
     </main>
 
-    <!-- MODAL TIL NYT STED -->
-    <div id="new-location-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 w-full max-w-xs space-y-4 shadow-2xl">
-            <h3 class="font-bold text-base text-slate-100">Opret ny byggeplads</h3>
-            <input type="text" id="new-location-name" placeholder="F.x. Vestergade 12" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-100 text-sm focus:outline-none focus:border-amber-500">
-            <div class="flex gap-2">
-                <button type="button" onclick="toggleNewLocationModal()" class="w-1/2 bg-slate-700 hover:bg-slate-600 py-2.5 rounded-lg text-sm font-medium">Annuller</button>
-                <button type="button" onclick="createLocation()" class="w-1/2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-lg text-sm">Opret</button>
+    <!-- FANE 2: 14-DAGE (ULIGE + LIGE UGE) & EXCEL -->
+    <main id="view-period" class="container hidden">
+        <section class="card">
+            <div class="card-header">
+                <div class="card-title">14-Dages Lønperiode (Lige uger)</div>
             </div>
-        </div>
-    </div>
+
+            <div class="period-selector">
+                <button type="button" class="date-nav-btn" onclick="stepPeriod(-1)">‹</button>
+                <div>
+                    <div id="period-weeks-title" class="period-title">Uge 43 + Uge 44</div>
+                    <div id="period-dates-sub" class="period-sub">19. okt – 1. nov</div>
+                </div>
+                <button type="button" class="date-nav-btn" onclick="stepPeriod(1)">›</button>
+            </div>
+
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div id="kpi-registered" class="kpi-val" style="color:var(--amber);">0,00 t</div>
+                    <div class="kpi-lbl">Registreret</div>
+                </div>
+                <div class="kpi-card">
+                    <div id="kpi-norm" class="kpi-val">74,00 t</div>
+                    <div class="kpi-lbl">14-dages Norm</div>
+                </div>
+                <div class="kpi-card">
+                    <div id="kpi-diff" class="kpi-val">0,00 t</div>
+                    <div class="kpi-lbl">Forskel / Over</div>
+                </div>
+            </div>
+
+            <button type="button" class="excel-btn" onclick="downloadExcel14Days()">⬇ Download 14-Dages Excel (.xls)</button>
+            <button type="button" class="secondary-btn" onclick="copyPeriodText()">📋 Kopiér 14-dages oversigt til SMS / Mail</button>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <div class="card-title">Dag-for-dag i 14-dages perioden</div>
+                <span style="font-size:11px;color:var(--green);font-weight:700;">Grøn = Lønnings-fredag</span>
+            </div>
+            <div id="period-days-list"></div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <div class="card-title">Timer fordelt på byggepladser</div>
+            </div>
+            <div id="period-places-summary"></div>
+        </section>
+    </main>
+
+    <!-- FANE 3: STEDER & ARKIV -->
+    <main id="view-places" class="container hidden">
+        <section class="card">
+            <div class="card-header">
+                <div class="card-title">Opret Nyt Sted / Byggeplads</div>
+            </div>
+            <div style="display:flex;gap:8px;">
+                <input type="text" id="new-place-input" class="input-text" placeholder="F.x. Vestergade 14 eller Kunde Hansen">
+                <button type="button" onclick="addNewPlaceFromInput()" style="background:var(--amber);color:#0f172a;border:none;padding:0 16px;border-radius:10px;font-weight:900;cursor:pointer;white-space:nowrap;">+ Opret</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <div class="card-title">Aktive Byggepladser</div>
+                <span style="font-size:11px;color:var(--muted);">Tryk ★ for favorit</span>
+            </div>
+            <div id="active-places-list"></div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <div class="card-title">Arkiverede Sager (Færdige)</div>
+            </div>
+            <div id="archived-places-list"></div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast hidden">Gemt!</div>
 
     <script>
-        let locations = JSON.parse(localStorage.getItem('carpenter_locations')) || [
-            { id: '1', name: 'Værksted / Lager', favorite: true, archived: false },
-            { id: '2', name: 'Trælasten', favorite: true, archived: false }
+        // --- DATA & STATE ---
+        let places = JSON.parse(localStorage.getItem('tomrer_places_v3')) || [
+            { id: 'p1', name: 'Værksted / Lager', fav: true, archived: false, lastUsed: 1700000003 },
+            { id: 'p2', name: 'Trælasten', fav: true, archived: false, lastUsed: 1700000002 }
         ];
-        let entries = JSON.parse(localStorage.getItem('carpenter_entries')) || [];
-        let selectedLocation = null;
+        let entries = JSON.parse(localStorage.getItem('tomrer_entries_v3')) || [];
 
-        // Sæt dato til i dag ved start
-        document.getElementById('input-date').valueAsDate = new Date();
-        onDateChange();
+        let selectedPlace = places[0] ? places[0].name : '';
+        let currentMinutes = 0;
+        let periodOffset = 0; // 0 = nuværende 14-dages blok (ulige + lige uge)
 
-        function getNormForDate(dateStr) {
-            const d = new Date(dateStr);
-            const day = d.getDay(); // 1=Mandag, 2=Tirsdag, 3=Onsdag, 4=Torsdag, 5=Fredag
-            if (day === 1 || day === 2) return 8; // Man-Tir
-            if (day >= 3 && day <= 5) return 7; // Ons-Fre
+        const DA_DAYS = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
+
+        function saveState() {
+            localStorage.setItem('tomrer_places_v3', JSON.stringify(places));
+            localStorage.setItem('tomrer_entries_v3', JSON.stringify(entries));
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.remove('hidden');
+            setTimeout(() => t.classList.add('hidden'), 2200);
+        }
+
+        // --- DATO & NORMTID LOGIK (Man-Tir=8t, Ons-Fre=7t) ---
+        function toDateStr(d) {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+
+        function parseDateStr(str) {
+            const [y, m, d] = str.split('-').map(Number);
+            return new Date(y, m - 1, d, 12, 0, 0);
+        }
+
+        function getNormHours(dateStr) {
+            const d = parseDateStr(dateStr);
+            const day = d.getDay();
+            if (day === 1 || day === 2) return 8; // Mandag & Tirsdag = 8 timer
+            if (day >= 3 && day <= 5) return 7;   // Onsdag til Fredag = 7 timer
             return 0; // Weekend
         }
 
-        function onDateChange() {
-            const dateStr = document.getElementById('input-date').value;
-            const norm = getNormForDate(dateStr);
-            const info = document.getElementById('norm-info');
-            if (norm > 0) {
-                info.innerText = `Norm for dag: ${norm} timer`;
-            } else {
-                info.innerText = `Norm for dag: Weekend (0 timer)`;
-            }
+        function getISOWeek(dateObj) {
+            const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+            return { year: d.getUTCFullYear(), week: weekNo };
         }
 
-        function fillRestOfDay() {
-            const dateStr = document.getElementById('input-date').value;
-            const norm = getNormForDate(dateStr);
-            if (norm === 0) {
-                alert('Det er weekend!');
-                return;
+        // Finder mandag i den ulige uge, så en 14-dages periode altid er [Ulige uge + Lige uge] og slutter i lige uge
+        function getBiweeklyPeriodBounds(offsetBlocks) {
+            const base = parseDateStr(document.getElementById('reg-date').value || toDateStr(new Date()));
+            const day = base.getDay() || 7; // 1..7 (Man..Søn)
+            const monday = new Date(base);
+            monday.setDate(base.getDate() - day + 1);
+
+            const iso = getISOWeek(monday);
+            // Hvis ugen er lige (fx uge 44), så startede 14-dages perioden mandag i forrige uge (uge 43)
+            if (iso.week % 2 === 0) {
+                monday.setDate(monday.getDate() - 7);
             }
-            let usedToday = 0;
-            entries.forEach(e => {
-                if(e.date === dateStr) usedToday += e.totalDecimal;
+            // Forskyd med 14 dage pr. offset
+            monday.setDate(monday.getDate() + (offsetBlocks * 14));
+
+            const sundayEnd = new Date(monday);
+            sundayEnd.setDate(monday.getDate() + 13);
+
+            const week1 = getISOWeek(monday).week;
+            const mondayWeek2 = new Date(monday);
+            mondayWeek2.setDate(monday.getDate() + 7);
+            const week2 = getISOWeek(mondayWeek2).week;
+
+            return { start: monday, end: sundayEnd, week1, week2 };
+        }
+
+        // --- SKIFT FANER ---
+        function switchTab(tab) {
+            ['reg', 'period', 'places'].forEach(t => {
+                document.getElementById('view-' + t).classList.toggle('hidden', t !== tab);
+                document.getElementById('tab-btn-' + t).classList.toggle('active', t === tab);
             });
-
-            let rest = norm - usedToday;
-            if(rest <= 0) {
-                alert('Du har allerede registreret fuld norm (eller mere) på denne dato.');
-                return;
-            }
-
-            let hours = Math.floor(rest);
-            let minutes = Math.round((rest - hours) * 60);
-
-            document.getElementById('input-hours').value = hours;
-            document.getElementById('input-minutes').value = minutes;
+            if (tab === 'period') renderPeriodView();
+            if (tab === 'places') renderPlacesManager();
         }
 
-        function renderLocations() {
-            const container = document.getElementById('quick-locations');
-            container.innerHTML = '';
-            
-            locations.filter(l => !l.archived).forEach(loc => {
+        // --- DATO NAVIGATION ---
+        function stepDate(days) {
+            const input = document.getElementById('reg-date');
+            const d = parseDateStr(input.value);
+            d.setDate(d.getDate() + days);
+            input.value = toDateStr(d);
+            onDateChanged();
+        }
+
+        function onDateChanged() {
+            const dateStr = document.getElementById('reg-date').value;
+            const d = parseDateStr(dateStr);
+            const dayName = DA_DAYS[d.getDay()];
+            const norm = getNormHours(dateStr);
+            const iso = getISOWeek(d);
+
+            document.getElementById('top-period-badge').textContent = `Uge ${iso.week} (${iso.week % 2 === 0 ? 'Lige' : 'Ulige'})`;
+
+            const usedHours = entries
+                .filter(e => e.date === dateStr)
+                .reduce((sum, e) => sum + (e.minutes / 60), 0);
+
+            document.getElementById('day-name-label').textContent = `${dayName} (Norm: ${norm},00 t)`;
+            document.getElementById('day-progress-text').textContent = `${usedHours.toFixed(2).replace('.', ',')} / ${norm},00 t`;
+
+            const pct = norm > 0 ? Math.min(100, (usedHours / norm) * 100) : 100;
+            const bar = document.getElementById('day-progress-bar');
+            bar.style.width = pct + '%';
+            bar.classList.toggle('done', usedHours >= norm && norm > 0);
+
+            // Opdater Fuld dag og Rest af dag knapper
+            const restHours = Math.max(0, norm - usedHours);
+            document.getElementById('btn-full-day').textContent = `Sæt Fuld Dag (${norm}t)`;
+            document.getElementById('btn-rest-day').textContent = `Rest af dag (${restHours.toFixed(2).replace('.00', '').replace('.', ',')}t)`;
+
+            renderDayEntries();
+        }
+
+        // --- STEDVÆLGER LOGIK ---
+        function selectPlace(name) {
+            selectedPlace = name;
+            const found = places.find(p => p.name.toLowerCase() === name.toLowerCase());
+            if (found) {
+                found.lastUsed = Date.now();
+                saveState();
+            }
+            document.getElementById('place-search').value = '';
+            document.getElementById('place-dropdown').classList.add('hidden');
+            renderPlaceSelector();
+        }
+
+        function renderPlaceSelector() {
+            const box = document.getElementById('selected-place-box');
+            const text = document.getElementById('selected-place-text');
+            const star = document.getElementById('selected-place-star');
+
+            if (selectedPlace) {
+                box.classList.add('active');
+                text.textContent = selectedPlace;
+                const p = places.find(x => x.name === selectedPlace);
+                star.textContent = (p && p.fav) ? '★' : '✓';
+            } else {
+                box.classList.remove('active');
+                text.textContent = 'Ingen plads valgt endnu';
+                star.textContent = '';
+            }
+
+            // Vis maks 6 hurtig-chips (Favoritter først, derefter senest brugte)
+            const activePlaces = places
+                .filter(p => !p.archived)
+                .sort((a, b) => (b.fav - a.fav) || ((b.lastUsed || 0) - (a.lastUsed || 0)))
+                .slice(0, 6);
+
+            const chipsContainer = document.getElementById('quick-chips');
+            chipsContainer.innerHTML = '';
+            activePlaces.forEach(p => {
                 const btn = document.createElement('button');
-                type = "button";
-                const isSelected = selectedLocation === loc.name;
-                btn.className = `text-xs px-3 py-2 rounded-lg border transition flex items-center gap-1 ${isSelected ? 'bg-amber-500 text-slate-950 border-amber-400 font-bold' : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-700'}`;
-                btn.innerHTML = `${loc.favorite ? '<i class="ph-fill ph-star text-amber-400"></i>' : ''} ${loc.name}`;
-                btn.onclick = () => selectLocation(loc.name);
-                container.appendChild(btn);
+                btn.type = 'button';
+                btn.className = 'chip' + (selectedPlace === p.name ? ' active' : '');
+                btn.innerHTML = `${p.fav ? '★ ' : ''}${p.name}`;
+                btn.onclick = () => selectPlace(p.name);
+                chipsContainer.appendChild(btn);
             });
-            updateBadge();
         }
 
-        function selectLocation(name) {
-            selectedLocation = name;
-            document.getElementById('location-search').value = name;
-            document.getElementById('location-dropdown').classList.add('hidden');
-            renderLocations();
-        }
+        function onSearchInput() {
+            const q = document.getElementById('place-search').value.trim();
+            const drop = document.getElementById('place-dropdown');
+            const active = places.filter(p => !p.archived && p.name.toLowerCase().includes(q.toLowerCase()));
 
-        function updateBadge() {
-            const badge = document.getElementById('active-location-badge');
-            badge.innerText = selectedLocation || 'Ingen plads valgt';
-            badge.className = selectedLocation ? 'text-xs bg-amber-500/10 text-amber-400 px-2.5 py-1 rounded-full border border-amber-500/30 truncate max-w-[180px]' : 'text-xs bg-slate-700 text-slate-400 px-2.5 py-1 rounded-full border border-slate-600 truncate max-w-[180px]';
-        }
+            drop.innerHTML = '';
+            active.forEach(p => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
+                item.innerHTML = `<span>${p.fav ? '★ ' : ''}${p.name}</span><span style="font-size:11px;color:var(--muted);">Vælg</span>`;
+                item.onclick = () => selectPlace(p.name);
+                drop.appendChild(item);
+            });
 
-        function showLocationDropdown() {
-            const dropdown = document.getElementById('location-dropdown');
-            dropdown.classList.remove('hidden');
-            filterLocations();
-        }
-
-        function filterLocations() {
-            const query = document.getElementById('location-search').value.toLowerCase();
-            const dropdown = document.getElementById('location-dropdown');
-            const filtered = locations.filter(l => !l.archived && l.name.toLowerCase().includes(query));
-
-            dropdown.innerHTML = '';
-            if(filtered.length === 0) {
-                dropdown.innerHTML = `<div class="p-3 text-xs text-slate-400">Ingen steder fundet. Tryk "+ Nyt sted".</div>`;
-            } else {
-                filtered.forEach(loc => {
-                    const div = document.createElement('div');
-                    div.className = "p-3 text-sm hover:bg-slate-800 cursor-pointer border-b border-slate-800 last:border-0 flex justify-between items-center text-slate-200";
-                    div.innerHTML = `<span>${loc.name}</span>`;
-                    div.onclick = () => selectLocation(loc.name);
-                    dropdown.appendChild(div);
-                });
+            if (q.length > 0 && !places.some(p => p.name.toLowerCase() === q.toLowerCase())) {
+                const createItem = document.createElement('div');
+                createItem.className = 'dropdown-item dropdown-create';
+                createItem.innerHTML = `<span>+ Opret og vælg "${q}"</span>`;
+                createItem.onclick = () => {
+                    places.push({ id: 'p_' + Date.now(), name: q, fav: false, archived: false, lastUsed: Date.now() });
+                    saveState();
+                    selectPlace(q);
+                    showToast(`Oprettede "${q}"`);
+                };
+                drop.appendChild(createItem);
             }
+
+            drop.classList.toggle('hidden', drop.children.length === 0);
         }
 
-        // Luk dropdown hvis man trykker udenfor
-        window.addEventListener('click', function(e) {
-            if (!document.getElementById('location-search').contains(e.target) && !document.getElementById('location-dropdown').contains(e.target)) {
-                document.getElementById('location-dropdown').classList.add('hidden');
+        document.addEventListener('click', (e) => {
+            const wrap = document.querySelector('.search-wrap');
+            if (wrap && !wrap.contains(e.target)) {
+                document.getElementById('place-dropdown').classList.add('hidden');
             }
         });
 
-        function toggleNewLocationModal() {
-            document.getElementById('new-location-modal').classList.toggle('hidden');
+        // --- TID & MINUTTER LOGIK ---
+        function setMinutes(mins) {
+            currentMinutes = Math.max(0, Math.round(mins));
+            updateTimeUI();
         }
 
-        function createLocation() {
-            const nameInput = document.getElementById('new-location-name');
-            const name = nameInput.value.trim();
-            if(!name) return;
-
-            locations.push({ id: Date.now().toString(), name, favorite: false, archived: false });
-            localStorage.setItem('carpenter_locations', JSON.stringify(locations));
-            nameInput.value = '';
-            toggleNewLocationModal();
-            selectLocation(name);
-            renderLocations();
+        function addMinutes(mins) {
+            setMinutes(currentMinutes + mins);
         }
 
-        function addMinutes(m) {
-            const minInput = document.getElementById('input-minutes');
-            minInput.value = (parseInt(minInput.value) || 0) + m;
+        function setFullDayNorm() {
+            const dateStr = document.getElementById('reg-date').value;
+            const norm = getNormHours(dateStr);
+            if (norm === 0) {
+                alert('Det er weekend (norm er 0 timer). Brug knapperne +1 time osv. til weekend-arbejde.');
+                return;
+            }
+            setMinutes(norm * 60);
         }
 
-        function addHours(h) {
-            const hourInput = document.getElementById('input-hours');
-            hourInput.value = (parseInt(hourInput.value) || 0) + h;
+        function setRestOfDayNorm() {
+            const dateStr = document.getElementById('reg-date').value;
+            const norm = getNormHours(dateStr);
+            const usedMins = entries
+                .filter(e => e.date === dateStr)
+                .reduce((s, e) => s + e.minutes, 0);
+            const rest = Math.max(0, (norm * 60) - usedMins);
+            if (rest === 0) {
+                alert('Du har allerede registreret fuld normtid på denne dag.');
+                return;
+            }
+            setMinutes(rest);
         }
 
-        function saveTimeEntry() {
-            const date = document.getElementById('input-date').value;
-            const hours = parseInt(document.getElementById('input-hours').value) || 0;
-            const minutes = parseInt(document.getElementById('input-minutes').value) || 0;
-            const category = document.getElementById('input-category').value;
-            const km = parseFloat(document.getElementById('input-km').value) || 0;
-            const note = document.getElementById('input-note').value;
+        function formatPrettyTime(mins) {
+            const h = Math.floor(mins / 60);
+            const m = mins % 60;
+            return `${h} t ${String(m).padStart(2, '0')} min`;
+        }
 
-            if(!selectedLocation) { alert('Vælg venligst et sted.'); return; }
-            if(hours === 0 && minutes === 0) { alert('Indtast venligst tid.'); return; }
+        function updateTimeUI() {
+            document.getElementById('time-pretty').textContent = formatPrettyTime(currentMinutes);
+            const dec = (currentMinutes / 60).toFixed(2).replace('.', ',');
+            document.getElementById('time-decimal').textContent = `${dec} decimaltimer til løn`;
+        }
 
-            const totalDecimal = hours + (minutes / 60);
+        // --- GEM & SLET REGISTRERING ---
+        function saveEntry() {
+            if (!selectedPlace) {
+                alert('Vælg eller opret venligst en byggeplads først.');
+                return;
+            }
+            if (currentMinutes <= 0) {
+                alert('Vælg venligst tid (+15 min, +1 time eller Fuld Dag).');
+                return;
+            }
+
+            const dateStr = document.getElementById('reg-date').value;
+            const category = document.getElementById('reg-category').value;
+            const km = parseFloat(document.getElementById('reg-km').value) || 0;
+            const note = document.getElementById('reg-note').value.trim();
 
             entries.unshift({
-                id: Date.now().toString(),
-                date,
-                location: selectedLocation,
-                hours,
-                minutes,
-                totalDecimal,
+                id: 'e_' + Date.now(),
+                date: dateStr,
+                place: selectedPlace,
+                minutes: currentMinutes,
                 category,
                 km,
                 note
             });
 
-            localStorage.setItem('carpenter_entries', JSON.stringify(entries));
-            
-            document.getElementById('input-hours').value = 0;
-            document.getElementById('input-minutes').value = 0;
-            document.getElementById('input-km').value = '';
-            document.getElementById('input-note').value = '';
-            
-            renderEntries();
+            saveState();
+            setMinutes(0);
+            document.getElementById('reg-km').value = '';
+            document.getElementById('reg-note').value = '';
+            onDateChanged();
+            showToast('Timer gemt!');
         }
 
         function deleteEntry(id) {
             entries = entries.filter(e => e.id !== id);
-            localStorage.setItem('carpenter_entries', JSON.stringify(entries));
-            renderEntries();
+            saveState();
+            onDateChanged();
         }
 
-        function renderEntries() {
-            const container = document.getElementById('entries-list');
-            container.innerHTML = '';
-            let totalSum = 0;
+        function renderDayEntries() {
+            const dateStr = document.getElementById('reg-date').value;
+            const dayList = entries.filter(e => e.date === dateStr);
+            document.getElementById('day-entries-count').textContent = `${dayList.length} ${dayList.length === 1 ? 'post' : 'poster'}`;
 
-            if(entries.length === 0) {
-                container.innerHTML = `<div class="text-xs text-slate-500 text-center py-4">Ingen registrerede timer endnu.</div>`;
-                document.getElementById('total-summary-hours').innerText = '0,0 t';
+            const container = document.getElementById('day-entries-list');
+            container.innerHTML = '';
+
+            if (dayList.length === 0) {
+                container.innerHTML = `<div style="text-align:center;color:var(--muted);font-size:13px;padding:14px 0;">Ingen timer registreret på denne dato endnu.</div>`;
                 return;
             }
 
-            entries.forEach(e => {
-                totalSum += e.totalDecimal;
+            dayList.forEach(e => {
+                const dec = (e.minutes / 60).toFixed(2).replace('.', ',');
                 const div = document.createElement('div');
-                div.className = "bg-slate-900 border border-slate-700/60 rounded-lg p-3 text-xs flex justify-between items-center";
+                div.className = 'entry-item';
                 div.innerHTML = `
                     <div>
-                        <div class="font-bold text-slate-200 text-sm">${e.location}</div>
-                        <div class="text-slate-400 mt-0.5">${e.date} • ${e.category} • <span class="text-amber-400 font-semibold">${e.hours > 0 ? e.hours + 't ' : ''}${e.minutes > 0 ? e.minutes + 'min' : ''} (${e.totalDecimal.toFixed(2)}t)</span>${e.km > 0 ? ' • ' + e.km + ' km' : ''}</div>
-                        ${e.note ? '<div class="text-slate-500 italic mt-1">"' + e.note + '"</div>' : ''}
+                        <div class="entry-place">${e.place}</div>
+                        <div class="entry-meta">${e.category} • ${formatPrettyTime(e.minutes)}${e.km > 0 ? ' • ' + e.km + ' km' : ''}</div>
+                        ${e.note ? `<div class="entry-note">"${e.note}"</div>` : ''}
                     </div>
-                    <button type="button" onclick="deleteEntry('${e.id}')" class="text-slate-500 hover:text-red-400 p-2"><i class="ph ph-trash text-lg"></i></button>
+                    <div class="entry-right">
+                        <span class="entry-hours-badge">${dec} t</span>
+                        <button type="button" class="del-btn" onclick="deleteEntry('${e.id}')">✕</button>
+                    </div>
                 `;
                 container.appendChild(div);
             });
-
-            document.getElementById('total-summary-hours').innerText = totalSum.toFixed(2) + ' t';
         }
 
-        function downloadExcelExport() {
-            if(entries.length === 0) {
-                alert('Ingen timer at eksportere.');
-                return;
+        // --- 14-DAGE & EXCEL VISNING ---
+        function stepPeriod(dir) {
+            periodOffset += dir;
+            renderPeriodView();
+        }
+
+        function renderPeriodView() {
+            const bounds = getBiweeklyPeriodBounds(periodOffset);
+            const fmt = (d) => `${d.getDate()}/${d.getMonth() + 1}`;
+            document.getElementById('period-weeks-title').textContent = `Uge ${bounds.week1} (ulige) + Uge ${bounds.week2} (lige)`;
+            document.getElementById('period-dates-sub').textContent = `${fmt(bounds.start)} – ${fmt(bounds.end)} (Afsluttes fredag i uge ${bounds.week2})`;
+
+            const daysContainer = document.getElementById('period-days-list');
+            daysContainer.innerHTML = '';
+
+            let totalRegHours = 0;
+            let totalNormHours = 0;
+            const placeTotals = {};
+
+            for (let i = 0; i < 14; i++) {
+                const cur = new Date(bounds.start);
+                cur.setDate(bounds.start.getDate() + i);
+                const dStr = toDateStr(cur);
+                const norm = getNormHours(dStr);
+                totalNormHours += norm;
+
+                const dayEntries = entries.filter(e => e.date === dStr);
+                const dayHours = dayEntries.reduce((s, e) => s + (e.minutes / 60), 0);
+                totalRegHours += dayHours;
+
+                dayEntries.forEach(e => {
+                    placeTotals[e.place] = (placeTotals[e.place] || 0) + (e.minutes / 60);
+                });
+
+                const isEvenFriday = (i === 11); // Fredag i uge 2 (lige uge)
+                const placesText = dayEntries.map(e => `${e.place} (${(e.minutes/60).toFixed(2).replace('.', ',')}t)`).join(', ');
+
+                const row = document.createElement('div');
+                row.className = 'day-row' + (isEvenFriday ? ' friday-even' : '');
+                row.innerHTML = `
+                    <div>
+                        <div style="font-weight:700;">${DA_DAYS[cur.getDay()].slice(0,3)} d. ${cur.getDate()}/${cur.getMonth()+1} ${isEvenFriday ? '• <span style="color:var(--green);">Løn-fredag</span>' : ''}</div>
+                        <div style="font-size:11px;color:var(--muted);">${placesText || 'Ingen registreringer'}</div>
+                    </div>
+                    <div style="text-align:right;font-weight:800;color:${dayHours >= norm && norm > 0 ? 'var(--green)' : (dayHours > 0 ? 'var(--amber)' : 'var(--muted)')};">
+                        ${dayHours.toFixed(2).replace('.', ',')} / ${norm}t
+                    </div>
+                `;
+                daysContainer.appendChild(row);
             }
 
-            let excelData = entries.map(e => ({
-                "Dato": e.date,
-                "Byggeplads / Kunde": e.location,
-                "Kategori": e.category,
-                "Timer (t)": parseFloat(e.totalDecimal.toFixed(2)),
-                "Kørsel (km)": e.km,
-                "Bemærkning": e.note || ""
-            }));
+            const diff = totalRegHours - totalNormHours;
+            document.getElementById('kpi-registered').textContent = totalRegHours.toFixed(2).replace('.', ',') + ' t';
+            document.getElementById('kpi-norm').textContent = totalNormHours.toFixed(2).replace('.', ',') + ' t';
+            const diffEl = document.getElementById('kpi-diff');
+            diffEl.textContent = (diff >= 0 ? '+' : '') + diff.toFixed(2).replace('.', ',') + ' t';
+            diffEl.style.color = diff >= 0 ? 'var(--green)' : '#f87171';
 
-            let worksheet = XLSX.utils.json_to_sheet(excelData);
-            let workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "14-Dages Timer");
-
-            XLSX.writeFile(workbook, "Tomrer_14Dages_Regnskab.xlsx");
+            // Byggeplads opsummering
+            const placeBox = document.getElementById('period-places-summary');
+            placeBox.innerHTML = '';
+            const placeKeys = Object.keys(placeTotals);
+            if (placeKeys.length === 0) {
+                placeBox.innerHTML = `<div style="font-size:13px;color:var(--muted);text-align:center;padding:10px;">Ingen timer i denne 14-dages periode endnu.</div>`;
+            } else {
+                placeKeys.forEach(place => {
+                    const r = document.createElement('div');
+                    r.className = 'day-row';
+                    r.innerHTML = `<span style="font-weight:700;">${place}</span><span style="font-weight:800;color:var(--amber);">${placeTotals[place].toFixed(2).replace('.', ',')} timer</span>`;
+                    placeBox.appendChild(r);
+                });
+            }
         }
 
-        function copyPayrollSummary() {
-            if(entries.length === 0) { alert('Ingen timer at kopiere.'); return; }
-            let text = "--- TØMRER TIMER ---\n";
-            let total = 0;
-            entries.forEach(e => {
-                total += e.totalDecimal;
-                text += `${e.date}: ${e.location} - ${e.hours}t ${e.minutes}min (${e.category})\n`;
+        // Download ægte Excel-kompatibel .xls fil med dansk formatering og tabeller
+        function downloadExcel14Days() {
+            const bounds = getBiweeklyPeriodBounds(periodOffset);
+            let rowsHtml = '';
+            let totalHours = 0;
+            let totalKm = 0;
+
+            for (let i = 0; i < 14; i++) {
+                const cur = new Date(bounds.start);
+                cur.setDate(bounds.start.getDate() + i);
+                const dStr = toDateStr(cur);
+                const wNo = getISOWeek(cur).week;
+                const norm = getNormHours(dStr);
+                const dayEntries = entries.filter(e => e.date === dStr);
+
+                if (dayEntries.length === 0 && norm > 0) {
+                    rowsHtml += `
+                        <tr>
+                            <td>Uge ${wNo}</td>
+                            <td>${DA_DAYS[cur.getDay()]}</td>
+                            <td>${dStr}</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td style="text-align:right;">0,00</td>
+                            <td style="text-align:right;">${norm},00</td>
+                            <td style="text-align:right;">0</td>
+                            <td></td>
+                        </tr>`;
+                } else {
+                    dayEntries.forEach(e => {
+                        const h = e.minutes / 60;
+                        totalHours += h;
+                        totalKm += (e.km || 0);
+                        rowsHtml += `
+                            <tr>
+                                <td>Uge ${wNo}</td>
+                                <td>${DA_DAYS[cur.getDay()]}</td>
+                                <td>${dStr}</td>
+                                <td><b>${e.place}</b></td>
+                                <td>${e.category}</td>
+                                <td style="text-align:right;">${h.toFixed(2).replace('.', ',')}</td>
+                                <td style="text-align:right;">${norm},00</td>
+                                <td style="text-align:right;">${e.km || 0}</td>
+                                <td>${e.note || ''}</td>
+                            </tr>`;
+                    });
+                }
+            }
+
+            const excelTemplate = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+                <head><meta charset="UTF-8"></head>
+                <body>
+                    <h2>14-Dages Tømrer Timeregnskab (Uge ${bounds.week1} + Uge ${bounds.week2})</h2>
+                    <p>Normtid: Mandag-Tirsdag 8 timer | Onsdag-Fredag 7 timer (74 timer pr. 14 dage)</p>
+                    <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;font-family:Calibri,sans-serif;">
+                        <tr style="background:#1e293b;color:#ffffff;font-weight:bold;">
+                            <th>Uge</th>
+                            <th>Ugedag</th>
+                            <th>Dato</th>
+                            <th>Byggeplads / Sted</th>
+                            <th>Kategori</th>
+                            <th>Timer</th>
+                            <th>Dagsnorm</th>
+                            <th>Kørsel (km)</th>
+                            <th>Bemærkning</th>
+                        </tr>
+                        ${rowsHtml}
+                        <tr style="background:#fef3c7;font-weight:bold;">
+                            <td colspan="5" style="text-align:right;">SAMLET I 14-DAGES PERIODEN:</td>
+                            <td style="text-align:right;">${totalHours.toFixed(2).replace('.', ',')}</td>
+                            <td style="text-align:right;">74,00</td>
+                            <td style="text-align:right;">${totalKm}</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </body>
+                </html>`;
+
+            const blob = new Blob(['\ufeff', excelTemplate], { type: 'application/vnd.ms-excel;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Tomrer_Timer_Uge_${bounds.week1}_${bounds.week2}.xls`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showToast('Excel-fil downloadet!');
+        }
+
+        function copyPeriodText() {
+            const bounds = getBiweeklyPeriodBounds(periodOffset);
+            let txt = `TØMRER TIMER - Uge ${bounds.week1} & Uge ${bounds.week2}\n`;
+            txt += `----------------------------------\n`;
+            let sum = 0;
+            let sumKm = 0;
+
+            for (let i = 0; i < 14; i++) {
+                const cur = new Date(bounds.start);
+                cur.setDate(bounds.start.getDate() + i);
+                const dStr = toDateStr(cur);
+                const dayEntries = entries.filter(e => e.date === dStr);
+                dayEntries.forEach(e => {
+                    const h = e.minutes / 60;
+                    sum += h;
+                    sumKm += (e.km || 0);
+                    txt += `${DA_DAYS[cur.getDay()].slice(0,3)} ${cur.getDate()}/${cur.getMonth()+1}: ${e.place} - ${h.toFixed(2).replace('.', ',')}t (${e.category})${e.km ? ' ['+e.km+' km]' : ''}\n`;
+                });
+            }
+            txt += `----------------------------------\n`;
+            txt += `Samlet tid: ${sum.toFixed(2).replace('.', ',')} timer (Norm: 74,00 timer)\n`;
+            if (sumKm > 0) txt += `Samlet kørsel: ${sumKm} km\n`;
+
+            navigator.clipboard.writeText(txt);
+            showToast('Kopieret til udklipsholder!');
+        }
+
+        // --- STEDER & ARKIV STYRING ---
+        function addNewPlaceFromInput() {
+            const inp = document.getElementById('new-place-input');
+            const name = inp.value.trim();
+            if (!name) return;
+            places.push({ id: 'p_' + Date.now(), name, fav: false, archived: false, lastUsed: Date.now() });
+            inp.value = '';
+            saveState();
+            renderPlacesManager();
+            renderPlaceSelector();
+            showToast('Sted oprettet!');
+        }
+
+        function toggleFav(id) {
+            const p = places.find(x => x.id === id);
+            if (p) p.fav = !p.fav;
+            saveState();
+            renderPlacesManager();
+            renderPlaceSelector();
+        }
+
+        function toggleArchive(id) {
+            const p = places.find(x => x.id === id);
+            if (p) p.archived = !p.archived;
+            saveState();
+            renderPlacesManager();
+            renderPlaceSelector();
+        }
+
+        function renderPlacesManager() {
+            const activeBox = document.getElementById('active-places-list');
+            const archBox = document.getElementById('archived-places-list');
+            activeBox.innerHTML = '';
+            archBox.innerHTML = '';
+
+            places.filter(p => !p.archived).forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'entry-item';
+                div.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <button type="button" onclick="toggleFav('${p.id}')" style="background:none;border:none;font-size:20px;cursor:pointer;color:${p.fav ? 'var(--amber)' : 'var(--muted)'};">★</button>
+                        <span style="font-weight:700;font-size:14px;">${p.name}</span>
+                    </div>
+                    <button type="button" onclick="toggleArchive('${p.id}')" style="background:var(--card);border:1px solid var(--border);color:var(--muted);padding:6px 10px;border-radius:8px;font-size:12px;cursor:pointer;">Arkivér</button>
+                `;
+                activeBox.appendChild(div);
             });
-            text += `\nSamlet: ${total.toFixed(2)} timer`;
-            navigator.clipboard.writeText(text);
-            alert('Lønoversigt kopieret!');
+
+            const archived = places.filter(p => p.archived);
+            if (archived.length === 0) {
+                archBox.innerHTML = `<div style="font-size:12px;color:var(--muted);text-align:center;padding:8px;">Ingen arkiverede steder.</div>`;
+            } else {
+                archived.forEach(p => {
+                    const div = document.createElement('div');
+                    div.className = 'entry-item';
+                    div.innerHTML = `
+                        <span style="color:var(--muted);font-size:14px;">${p.name}</span>
+                        <button type="button" onclick="toggleArchive('${p.id}')" style="background:var(--amber-soft);border:1px solid var(--amber);color:var(--amber);padding:6px 10px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">Gendan</button>
+                    `;
+                    archBox.appendChild(div);
+                });
+            }
         }
 
-        renderLocations();
-        renderEntries();
+        // --- INIT ---
+        document.getElementById('reg-date').value = toDateStr(new Date());
+        onDateChanged();
+        renderPlaceSelector();
+        updateTimeUI();
     </script>
 </body>
 </html>
