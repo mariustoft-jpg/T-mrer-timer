@@ -10,7 +10,7 @@
     <!-- SheetJS til Excel-eksport direkte i browseren -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen pb-20">
+<body class="bg-slate-900 text-slate-100 min-h-screen pb-20 select-none">
     <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 px-4 py-3 flex justify-between items-center shadow-md">
         <div class="flex items-center space-x-2">
             <i class="ph ph-hammer text-amber-500 text-2xl"></i>
@@ -31,21 +31,21 @@
             <!-- Dato -->
             <div>
                 <label class="block text-xs text-slate-400 mb-1">Dato</label>
-                <input type="date" id="input-date" onchange="onDateChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100 text-sm focus:outline-none focus:border-amber-500">
-                <div id="norm-info" class="text-[11px] text-amber-400/80 mt-1">Norm for dag: 8 timer</div>
+                <input type="date" id="input-date" onchange="onDateChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-100 text-base focus:outline-none focus:border-amber-500">
+                <div id="norm-info" class="text-xs text-amber-400/90 mt-1 font-medium">Norm for dag: 8 timer</div>
             </div>
 
             <!-- Sted Vælger -->
             <div>
                 <div class="flex justify-between items-center mb-1">
                     <label class="text-xs text-slate-400">Byggeplads / Kunde</label>
-                    <button onclick="toggleNewLocationModal()" class="text-xs text-amber-400 hover:underline flex items-center gap-1">
-                        <i class="ph ph-plus"></i> Nyt sted
+                    <button type="button" onclick="toggleNewLocationModal()" class="text-xs text-amber-400 hover:underline flex items-center gap-1 py-1">
+                        <i class="ph ph-plus font-bold"></i> Nyt sted
                     </button>
                 </div>
                 <div class="relative">
-                    <input type="text" id="location-search" placeholder="Søg eller vælg sted..." oninput="filterLocations()" onclick="showLocationDropdown()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100 text-sm focus:outline-none focus:border-amber-500">
-                    <div id="location-dropdown" class="hidden absolute left-0 right-0 top-full mt-1 bg-slate-900 border border-slate-700 rounded-lg shadow-xl max-h-48 overflow-y-auto z-20"></div>
+                    <input type="text" id="location-search" placeholder="Søg eller vælg sted..." oninput="filterLocations()" onclick="showLocationDropdown()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-100 text-base focus:outline-none focus:border-amber-500">
+                    <div id="location-dropdown" class="hidden absolute left-0 right-0 top-full mt-1 bg-slate-900 border border-slate-700 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-30"></div>
                 </div>
                 <div id="quick-locations" class="flex flex-wrap gap-1.5 mt-2"></div>
             </div>
@@ -54,18 +54,18 @@
             <div>
                 <div class="flex justify-between items-center mb-1">
                     <label class="text-xs text-slate-400">Tid / Varighed</label>
-                    <button onclick="fillRestOfDay()" class="text-xs text-amber-400 hover:underline">Sæt rest af dag</button>
+                    <button type="button" onclick="fillRestOfDay()" class="text-xs text-amber-400 hover:underline py-1">Sæt rest af dag</button>
                 </div>
                 <div class="flex gap-2 mb-2">
-                    <input type="number" id="input-hours" placeholder="Timer" min="0" value="0" class="w-1/2 bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-center text-lg font-bold focus:outline-none focus:border-amber-500">
-                    <input type="number" id="input-minutes" placeholder="Min" min="0" max="59" step="15" value="0" class="w-1/2 bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-center text-lg font-bold focus:outline-none focus:border-amber-500">
+                    <input type="number" id="input-hours" placeholder="Timer" min="0" value="0" class="w-1/2 bg-slate-900 border border-slate-700 rounded-lg p-3 text-center text-xl font-bold focus:outline-none focus:border-amber-500">
+                    <input type="number" id="input-minutes" placeholder="Min" min="0" max="59" step="15" value="0" class="w-1/2 bg-slate-900 border border-slate-700 rounded-lg p-3 text-center text-xl font-bold focus:outline-none focus:border-amber-500">
                 </div>
                 <!-- Hurtig-knapper til minutter -->
-                <div class="grid grid-cols-4 gap-1.5">
-                    <button onclick="addMinutes(15)" class="bg-slate-700 hover:bg-slate-600 text-xs py-2 rounded-lg font-medium active:scale-95 transition">+15 min</button>
-                    <button onclick="addMinutes(30)" class="bg-slate-700 hover:bg-slate-600 text-xs py-2 rounded-lg font-medium active:scale-95 transition">+30 min</button>
-                    <button onclick="addMinutes(45)" class="bg-slate-700 hover:bg-slate-600 text-xs py-2 rounded-lg font-medium active:scale-95 transition">+45 min</button>
-                    <button onclick="addHours(1)" class="bg-amber-600 hover:bg-amber-500 text-slate-950 text-xs py-2 rounded-lg font-bold active:scale-95 transition">+1 time</button>
+                <div class="grid grid-cols-4 gap-2">
+                    <button type="button" onclick="addMinutes(15)" class="bg-slate-700 hover:bg-slate-600 active:bg-slate-500 text-xs py-3 rounded-lg font-medium transition">+15 min</button>
+                    <button type="button" onclick="addMinutes(30)" class="bg-slate-700 hover:bg-slate-600 active:bg-slate-500 text-xs py-3 rounded-lg font-medium transition">+30 min</button>
+                    <button type="button" onclick="addMinutes(45)" class="bg-slate-700 hover:bg-slate-600 active:bg-slate-500 text-xs py-3 rounded-lg font-medium transition">+45 min</button>
+                    <button type="button" onclick="addHours(1)" class="bg-amber-600 hover:bg-amber-500 active:bg-amber-400 text-slate-950 text-xs py-3 rounded-lg font-bold transition">+1 time</button>
                 </div>
             </div>
 
@@ -73,7 +73,7 @@
             <div class="grid grid-cols-2 gap-2">
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">Kategori</label>
-                    <select id="input-category" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100 text-sm focus:outline-none focus:border-amber-500">
+                    <select id="input-category" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-100 text-sm focus:outline-none focus:border-amber-500">
                         <option value="Tømrerarbejde">Tømrerarbejde</option>
                         <option value="Tagarbejde">Tagarbejde</option>
                         <option value="Vinduer / Døre">Vinduer / Døre</option>
@@ -84,18 +84,18 @@
                 </div>
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">Kørsel (km)</label>
-                    <input type="number" id="input-km" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100 text-sm focus:outline-none focus:border-amber-500">
+                    <input type="number" id="input-km" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-100 text-sm focus:outline-none focus:border-amber-500">
                 </div>
             </div>
 
             <!-- Note -->
             <div>
                 <label class="block text-xs text-slate-400 mb-1">Bemærkning (valgfri)</label>
-                <input type="text" id="input-note" placeholder="F.x. montering af lofter..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100 text-sm focus:outline-none focus:border-amber-500">
+                <input type="text" id="input-note" placeholder="F.x. montering af lofter..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-100 text-sm focus:outline-none focus:border-amber-500">
             </div>
 
-            <button onclick="saveTimeEntry()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl shadow-lg transition active:scale-95 flex items-center justify-center gap-2">
-                <i class="ph ph-check-circle text-xl"></i> Gem Timer
+            <button type="button" onclick="saveTimeEntry()" class="w-full bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-base">
+                <i class="ph ph-check-circle text-2xl"></i> Gem Timer
             </button>
         </section>
 
@@ -105,17 +105,17 @@
                 <h2 class="font-semibold text-slate-200 flex items-center gap-2">
                     <i class="ph ph-list-dashes text-amber-500"></i> Oversigt & Løn
                 </h2>
-                <div class="text-xs text-slate-400 bg-slate-900 px-2 py-1 rounded border border-slate-700" id="total-summary-hours">0,0 t</div>
+                <div class="text-xs text-slate-300 bg-slate-900 px-2.5 py-1 rounded border border-slate-700 font-bold" id="total-summary-hours">0,0 t</div>
             </div>
             
             <div id="entries-list" class="space-y-2 max-h-64 overflow-y-auto pr-1">
                 <!-- Dynamisk indhold -->
             </div>
 
-            <button onclick="downloadExcelExport()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+            <button type="button" onclick="downloadExcelExport()" class="w-full bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white text-sm font-bold py-3.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
                 <i class="ph ph-file-xls text-xl"></i> Download 14-dages regnskab (Excel)
             </button>
-            <button onclick="copyPayrollSummary()" class="w-full bg-slate-700 hover:bg-slate-600 text-slate-100 text-xs font-medium py-2 rounded-lg border border-slate-600 transition flex items-center justify-center gap-2">
+            <button type="button" onclick="copyPayrollSummary()" class="w-full bg-slate-700 hover:bg-slate-600 active:bg-slate-500 text-slate-100 text-xs font-medium py-2.5 rounded-lg border border-slate-600 transition flex items-center justify-center gap-2">
                 <i class="ph ph-copy"></i> Kopiér til SMS/Mail
             </button>
         </section>
@@ -125,10 +125,10 @@
     <div id="new-location-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 w-full max-w-xs space-y-4 shadow-2xl">
             <h3 class="font-bold text-base text-slate-100">Opret ny byggeplads</h3>
-            <input type="text" id="new-location-name" placeholder="F.x. Vestergade 12" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100 text-sm focus:outline-none focus:border-amber-500">
+            <input type="text" id="new-location-name" placeholder="F.x. Vestergade 12" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-100 text-sm focus:outline-none focus:border-amber-500">
             <div class="flex gap-2">
-                <button onclick="toggleNewLocationModal()" class="w-1/2 bg-slate-700 hover:bg-slate-600 py-2 rounded-lg text-sm">Annuller</button>
-                <button onclick="createLocation()" class="w-1/2 bg-amber-500 text-slate-950 font-bold py-2 rounded-lg text-sm">Opret</button>
+                <button type="button" onclick="toggleNewLocationModal()" class="w-1/2 bg-slate-700 hover:bg-slate-600 py-2.5 rounded-lg text-sm font-medium">Annuller</button>
+                <button type="button" onclick="createLocation()" class="w-1/2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-lg text-sm">Opret</button>
             </div>
         </div>
     </div>
@@ -141,12 +141,13 @@
         let entries = JSON.parse(localStorage.getItem('carpenter_entries')) || [];
         let selectedLocation = null;
 
+        // Sæt dato til i dag ved start
         document.getElementById('input-date').valueAsDate = new Date();
         onDateChange();
 
         function getNormForDate(dateStr) {
             const d = new Date(dateStr);
-            const day = d.getDay(); // 1=Mandag, 2=Tirsdag, 3=Onsdag, 4=Torsdag, 5=Fredag, 6=Lørdag, 0=Søndag
+            const day = d.getDay(); // 1=Mandag, 2=Tirsdag, 3=Onsdag, 4=Torsdag, 5=Fredag
             if (day === 1 || day === 2) return 8; // Man-Tir
             if (day >= 3 && day <= 5) return 7; // Ons-Fre
             return 0; // Weekend
@@ -170,7 +171,6 @@
                 alert('Det er weekend!');
                 return;
             }
-            // Beregn allerede brugte timer på denne dato
             let usedToday = 0;
             entries.forEach(e => {
                 if(e.date === dateStr) usedToday += e.totalDecimal;
@@ -195,8 +195,9 @@
             
             locations.filter(l => !l.archived).forEach(loc => {
                 const btn = document.createElement('button');
+                type = "button";
                 const isSelected = selectedLocation === loc.name;
-                btn.className = `text-xs px-3 py-1.5 rounded-lg border transition flex items-center gap-1 ${isSelected ? 'bg-amber-500 text-slate-950 border-amber-400 font-bold' : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-700'}`;
+                btn.className = `text-xs px-3 py-2 rounded-lg border transition flex items-center gap-1 ${isSelected ? 'bg-amber-500 text-slate-950 border-amber-400 font-bold' : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-700'}`;
                 btn.innerHTML = `${loc.favorite ? '<i class="ph-fill ph-star text-amber-400"></i>' : ''} ${loc.name}`;
                 btn.onclick = () => selectLocation(loc.name);
                 container.appendChild(btn);
@@ -230,17 +231,24 @@
 
             dropdown.innerHTML = '';
             if(filtered.length === 0) {
-                dropdown.innerHTML = `<div class="p-2.5 text-xs text-slate-400">Ingen steder fundet. Tryk "+ Nyt sted".</div>`;
+                dropdown.innerHTML = `<div class="p-3 text-xs text-slate-400">Ingen steder fundet. Tryk "+ Nyt sted".</div>`;
             } else {
                 filtered.forEach(loc => {
                     const div = document.createElement('div');
-                    div.className = "p-2.5 text-sm hover:bg-slate-800 cursor-pointer border-b border-slate-800 last:border-0 flex justify-between items-center";
+                    div.className = "p-3 text-sm hover:bg-slate-800 cursor-pointer border-b border-slate-800 last:border-0 flex justify-between items-center text-slate-200";
                     div.innerHTML = `<span>${loc.name}</span>`;
                     div.onclick = () => selectLocation(loc.name);
                     dropdown.appendChild(div);
                 });
             }
         }
+
+        // Luk dropdown hvis man trykker udenfor
+        window.addEventListener('click', function(e) {
+            if (!document.getElementById('location-search').contains(e.target) && !document.getElementById('location-dropdown').contains(e.target)) {
+                document.getElementById('location-dropdown').classList.add('hidden');
+            }
+        });
 
         function toggleNewLocationModal() {
             document.getElementById('new-location-modal').classList.toggle('hidden');
@@ -316,7 +324,7 @@
             let totalSum = 0;
 
             if(entries.length === 0) {
-                container.innerHTML = `<div class="text-xs text-slate-500 text-center py-3">Ingen registrerede timer endnu.</div>`;
+                container.innerHTML = `<div class="text-xs text-slate-500 text-center py-4">Ingen registrerede timer endnu.</div>`;
                 document.getElementById('total-summary-hours').innerText = '0,0 t';
                 return;
             }
@@ -324,14 +332,14 @@
             entries.forEach(e => {
                 totalSum += e.totalDecimal;
                 const div = document.createElement('div');
-                div.className = "bg-slate-900 border border-slate-700/60 rounded-lg p-2.5 text-xs flex justify-between items-center";
+                div.className = "bg-slate-900 border border-slate-700/60 rounded-lg p-3 text-xs flex justify-between items-center";
                 div.innerHTML = `
                     <div>
-                        <div class="font-bold text-slate-200">${e.location}</div>
-                        <div class="text-slate-400">${e.date} • ${e.category} ${e.hours > 0 ? e.hours + 't ' : ''}${e.minutes > 0 ? e.minutes + 'min' : ''} (${e.totalDecimal.toFixed(2)}t)${e.km > 0 ? ' • ' + e.km + ' km' : ''}</div>
-                        ${e.note ? '<div class="text-slate-500 italic mt-0.5">"' + e.note + '"</div>' : ''}
+                        <div class="font-bold text-slate-200 text-sm">${e.location}</div>
+                        <div class="text-slate-400 mt-0.5">${e.date} • ${e.category} • <span class="text-amber-400 font-semibold">${e.hours > 0 ? e.hours + 't ' : ''}${e.minutes > 0 ? e.minutes + 'min' : ''} (${e.totalDecimal.toFixed(2)}t)</span>${e.km > 0 ? ' • ' + e.km + ' km' : ''}</div>
+                        ${e.note ? '<div class="text-slate-500 italic mt-1">"' + e.note + '"</div>' : ''}
                     </div>
-                    <button onclick="deleteEntry('${e.id}')" class="text-slate-500 hover:text-red-400 p-1"><i class="ph ph-trash text-base"></i></button>
+                    <button type="button" onclick="deleteEntry('${e.id}')" class="text-slate-500 hover:text-red-400 p-2"><i class="ph ph-trash text-lg"></i></button>
                 `;
                 container.appendChild(div);
             });
