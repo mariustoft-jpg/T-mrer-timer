@@ -19,6 +19,7 @@
             --green-hover: #059669;
             --red: #ef4444;
             --blue: #3b82f6;
+            --blue-soft: rgba(59, 130, 246, 0.15);
         }
 
         * {
@@ -138,6 +139,10 @@
             padding: 16px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
         }
+        .card.editing-mode {
+            border: 2px solid var(--blue);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.25);
+        }
         .card-header {
             display: flex;
             justify-content: space-between;
@@ -159,6 +164,39 @@
             letter-spacing: 0.5px;
             color: var(--muted);
             margin-bottom: 6px;
+        }
+
+        /* EDIT BANNER */
+        .edit-banner {
+            background: var(--blue-soft);
+            border: 1.5px solid var(--blue);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .edit-banner-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #93c5fd;
+        }
+        .edit-banner-sub {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+        .cancel-edit-btn {
+            background: var(--card-alt);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
         }
 
         /* DATO & NORM STATUSBAR */
@@ -227,7 +265,7 @@
             background: var(--green);
         }
 
-        /* STED- OG OPGAVEVÆLGER */
+        /* STED- OG UNDEREMNE-VÆLGER */
         .selected-place-banner {
             background: var(--card-alt);
             border: 1.5px solid var(--border);
@@ -296,7 +334,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            margin-top: 10px;
+            margin-top: 8px;
         }
         .chip {
             background: var(--card-alt);
@@ -317,8 +355,36 @@
             border-color: var(--amber);
             font-weight: 800;
         }
+        .chip.sub-chip.active {
+            background: var(--blue);
+            color: #ffffff;
+            border-color: var(--blue);
+        }
 
-        /* TIDSVÆLGER (15, 30, 45 MIN & FULDE DAGE) */
+        /* UNDEREMNE BOKS */
+        .subtopic-box {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px dashed var(--border);
+        }
+        .sub-add-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .sub-add-btn {
+            background: var(--card-alt);
+            border: 1px solid var(--amber);
+            color: var(--amber);
+            padding: 0 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* TIDSVÆLGER */
         .time-display-box {
             background: var(--card-alt);
             border: 1px solid var(--border);
@@ -339,6 +405,20 @@
             font-size: 12px;
             color: var(--muted);
             margin-top: 2px;
+        }
+        .time-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .minus-btn {
+            background: var(--card);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 8px 10px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
         }
         .reset-btn {
             background: rgba(239, 68, 68, 0.15);
@@ -419,9 +499,13 @@
             cursor: pointer;
             box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
         }
+        .save-btn.editing {
+            background: var(--blue);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+        }
         .save-btn:active {
             transform: scale(0.99);
-            background: var(--amber-hover);
         }
 
         /* LISTE OVER REGISTRERINGER */
@@ -434,15 +518,31 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
+            gap: 8px;
+        }
+        .entry-item.being-edited {
+            border-color: var(--blue);
+            background: var(--blue-soft);
         }
         .entry-place {
             font-weight: 800;
             font-size: 14px;
         }
+        .entry-subbadge {
+            display: inline-block;
+            background: var(--blue-soft);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            padding: 1px 7px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-left: 4px;
+        }
         .entry-meta {
             font-size: 12px;
             color: var(--muted);
-            margin-top: 2px;
+            margin-top: 3px;
         }
         .entry-note {
             font-size: 12px;
@@ -453,7 +553,8 @@
         .entry-right {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
+            flex-shrink: 0;
         }
         .entry-hours-badge {
             background: var(--amber-soft);
@@ -465,11 +566,21 @@
             font-size: 13px;
             white-space: nowrap;
         }
+        .edit-btn {
+            background: #1e293b;
+            border: 1px solid var(--border);
+            color: #93c5fd;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 6px 9px;
+            border-radius: 8px;
+        }
         .del-btn {
             background: transparent;
             border: none;
             color: var(--muted);
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
             padding: 4px 6px;
         }
@@ -550,9 +661,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 9px 10px;
+            padding: 10px;
             border-bottom: 1px solid #1e293b;
             font-size: 13px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .day-row:hover, .day-row:active {
+            background: rgba(255, 255, 255, 0.03);
         }
         .day-row:last-child {
             border-bottom: none;
@@ -560,6 +676,15 @@
         .day-row.friday-even {
             background: rgba(16, 185, 129, 0.08);
             border-left: 3px solid var(--green);
+        }
+
+        /* STEDER MANAGER UNDEREMNER */
+        .place-card-item {
+            background: var(--card-alt);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
         }
 
         .hidden {
@@ -606,8 +731,18 @@
         </div>
     </div>
 
-    <!-- FANE 1: REGISTRER TIMER -->
+    <!-- FANE 1: REGISTRER & REDIGER TIMER -->
     <main id="view-reg" class="container">
+
+        <!-- Redigerings-banner -->
+        <div id="edit-mode-banner" class="edit-banner hidden">
+            <div>
+                <div class="edit-banner-title">✎ Du redigerer en registrering</div>
+                <div id="edit-banner-details" class="edit-banner-sub">Ret tid, sted, underemne eller dato</div>
+            </div>
+            <button type="button" class="cancel-edit-btn" onclick="cancelEdit()">Annuller</button>
+        </div>
+
         <!-- Dato og Dagens Norm -->
         <section class="card">
             <span class="label">Dato & Dagens Normtid</span>
@@ -627,34 +762,53 @@
             </div>
         </section>
 
-        <!-- Sted / Byggeplads Vælger -->
-        <section class="card">
+        <!-- Sted + Underemne Vælger -->
+        <section id="place-card" class="card">
             <div class="card-header">
-                <div class="card-title">1. Vælg Byggeplads / Sted</div>
-                <button type="button" onclick="switchTab('places')" style="background:none;border:none;color:var(--amber);font-size:12px;font-weight:700;cursor:pointer;">Alle steder ›</button>
+                <div class="card-title">1. Vælg Sted & Underemne</div>
+                <button type="button" onclick="switchTab('places')" style="background:none;border:none;color:var(--amber);font-size:12px;font-weight:700;cursor:pointer;">Administrer steder ›</button>
             </div>
 
+            <!-- Viser det samlede resultat fx "Palsgaard - Hal B" -->
             <div id="selected-place-box" class="selected-place-banner">
                 <div>
-                    <div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:700;">Valgt byggeplads</div>
+                    <div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:700;">Valgt Sted & Underemne</div>
                     <div id="selected-place-text" class="selected-place-name">Ingen plads valgt endnu</div>
                 </div>
                 <span id="selected-place-star" style="color:var(--amber);font-size:18px;"></span>
             </div>
 
+            <!-- Søg eller opret hovedsted -->
             <div class="search-wrap">
-                <input type="text" id="place-search" class="input-text" placeholder="Søg sted eller skriv nyt navn her..." oninput="onSearchInput()" onfocus="onSearchInput()">
+                <input type="text" id="place-search" class="input-text" placeholder="Søg sted eller skriv nyt (f.eks. Palsgaard)..." oninput="onSearchInput()" onfocus="onSearchInput()">
                 <div id="place-dropdown" class="dropdown hidden"></div>
             </div>
 
             <div style="margin-top:10px;font-size:11px;color:var(--muted);font-weight:700;">★ Favoritter & Seneste steder:</div>
             <div id="quick-chips" class="chips-wrap"></div>
+
+            <!-- UNDEREMNE SEKTION (Knyttet til det valgte sted) -->
+            <div id="subtopic-section" class="subtopic-box hidden">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span class="label" style="margin-bottom:0;color:#93c5fd;">Underemne / Hal / Opgave på <span id="subtopic-place-label">stedet</span></span>
+                    <button type="button" onclick="selectSubtopic('')" style="background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;">Ryd underemne</button>
+                </div>
+
+                <!-- Hurtige knapper med gemte underemner under dette sted -->
+                <div id="subtopic-chips" class="chips-wrap"></div>
+
+                <!-- Tilføj eller skriv nyt underemne under dette sted -->
+                <div class="sub-add-row">
+                    <input type="text" id="subtopic-input" class="input-text" style="padding:9px 12px;font-size:13px;" placeholder="Nyt underemne (f.eks. Hal B, Kontor)..." oninput="onSubtopicTyping()" onkeydown="if(event.key==='Enter'){event.preventDefault();saveCurrentSubtopicToPlace();}">
+                    <button type="button" class="sub-add-btn" onclick="saveCurrentSubtopicToPlace()">+ Gem under sted</button>
+                </div>
+            </div>
         </section>
 
         <!-- Tid / Minutter / Fuld dag -->
-        <section class="card">
+        <section id="time-card" class="card">
             <div class="card-header">
-                <div class="card-title">2. Vælg Tid på Pladsen</div>
+                <div id="time-card-title" class="card-title">2. Vælg Tid på Pladsen</div>
             </div>
 
             <div class="time-display-box">
@@ -662,7 +816,10 @@
                     <div id="time-pretty" class="time-main">0 t 00 min</div>
                     <div id="time-decimal" class="time-decimal">0,00 decimaltimer til løn</div>
                 </div>
-                <button type="button" class="reset-btn" onclick="setMinutes(0)">Nulstil</button>
+                <div class="time-actions">
+                    <button type="button" class="minus-btn" onclick="addMinutes(-15)">-15 min</button>
+                    <button type="button" class="reset-btn" onclick="setMinutes(0)">Nulstil</button>
+                </div>
             </div>
 
             <!-- Hurtige Fuld-dag & Rest-knapper -->
@@ -689,7 +846,7 @@
             <!-- Kategori, Kørsel & Note -->
             <div class="grid-2">
                 <div>
-                    <span class="label">Opgavetype</span>
+                    <span class="label">Arbejdstype</span>
                     <select id="reg-category" class="input-text">
                         <option value="Tømrerarbejde">Tømrerarbejde</option>
                         <option value="Tagarbejde">Tagarbejde</option>
@@ -707,11 +864,11 @@
             </div>
 
             <div style="margin-top:10px;">
-                <span class="label">Bemærkning (valgfri)</span>
+                <span class="label">Ekstra bemærkning (valgfri)</span>
                 <input type="text" id="reg-note" class="input-text" placeholder="F.x. Montering af Troldtekt, hentet lægter...">
             </div>
 
-            <button type="button" class="save-btn" onclick="saveEntry()">✓ Gem Timer på Stedet</button>
+            <button type="button" id="main-save-btn" class="save-btn" onclick="saveEntry()">✓ Gem Timer på Stedet</button>
         </section>
 
         <!-- Dagens Registreringer -->
@@ -734,8 +891,8 @@
             <div class="period-selector">
                 <button type="button" class="date-nav-btn" onclick="stepPeriod(-1)">‹</button>
                 <div>
-                    <div id="period-weeks-title" class="period-title">Uge 43 + Uge 44</div>
-                    <div id="period-dates-sub" class="period-sub">19. okt – 1. nov</div>
+                    <div id="period-weeks-title" class="period-title">Uge -- + Uge --</div>
+                    <div id="period-dates-sub" class="period-sub">--</div>
                 </div>
                 <button type="button" class="date-nav-btn" onclick="stepPeriod(1)">›</button>
             </div>
@@ -755,41 +912,41 @@
                 </div>
             </div>
 
-            <button type="button" class="excel-btn" onclick="downloadExcel14Days()">⬇ Download 14-Dages Excel (.xls)</button>
+            <button type="button" class="excel-btn" onclick="downloadExcel14Days()">⬇ Download Overskueligt Excel (.xls)</button>
             <button type="button" class="secondary-btn" onclick="copyPeriodText()">📋 Kopiér 14-dages oversigt til SMS / Mail</button>
         </section>
 
         <section class="card">
             <div class="card-header">
-                <div class="card-title">Dag-for-dag i 14-dages perioden</div>
-                <span style="font-size:11px;color:var(--green);font-weight:700;">Grøn = Lønnings-fredag</span>
+                <div class="card-title">Dag-for-dag (Tryk på en dag for at rette)</div>
+                <span style="font-size:11px;color:var(--green);font-weight:700;">Grøn = Løn-fredag</span>
             </div>
             <div id="period-days-list"></div>
         </section>
 
         <section class="card">
             <div class="card-header">
-                <div class="card-title">Timer fordelt på byggepladser</div>
+                <div class="card-title">Timer fordelt på Sted & Underemne</div>
             </div>
             <div id="period-places-summary"></div>
         </section>
     </main>
 
-    <!-- FANE 3: STEDER & ARKIV -->
+    <!-- FANE 3: STEDER, UNDEREMNER & ARKIV -->
     <main id="view-places" class="container hidden">
         <section class="card">
             <div class="card-header">
-                <div class="card-title">Opret Nyt Sted / Byggeplads</div>
+                <div class="card-title">Opret Nyt Hovedsted / Kunde</div>
             </div>
             <div style="display:flex;gap:8px;">
-                <input type="text" id="new-place-input" class="input-text" placeholder="F.x. Vestergade 14 eller Kunde Hansen">
+                <input type="text" id="new-place-input" class="input-text" placeholder="F.x. Palsgaard, Vestergade 14...">
                 <button type="button" onclick="addNewPlaceFromInput()" style="background:var(--amber);color:#0f172a;border:none;padding:0 16px;border-radius:10px;font-weight:900;cursor:pointer;white-space:nowrap;">+ Opret</button>
             </div>
         </section>
 
         <section class="card">
             <div class="card-header">
-                <div class="card-title">Aktive Byggepladser</div>
+                <div class="card-title">Aktive Steder & Deres Underemner</div>
                 <span style="font-size:11px;color:var(--muted);">Tryk ★ for favorit</span>
             </div>
             <div id="active-places-list"></div>
@@ -808,14 +965,20 @@
     <script>
         // --- DATA & STATE ---
         let places = JSON.parse(localStorage.getItem('tomrer_places_v3')) || [
-            { id: 'p1', name: 'Værksted / Lager', fav: true, archived: false, lastUsed: 1700000003 },
-            { id: 'p2', name: 'Trælasten', fav: true, archived: false, lastUsed: 1700000002 }
+            { id: 'p1', name: 'Palsgaard', fav: true, archived: false, lastUsed: 1700000004, subtopics: ['Hal B', 'Hal A', 'Kontor'] },
+            { id: 'p2', name: 'Værksted / Lager', fav: true, archived: false, lastUsed: 1700000003, subtopics: ['Klargøring', 'Oprydning'] },
+            { id: 'p3', name: 'Trælasten', fav: true, archived: false, lastUsed: 1700000002, subtopics: [] }
         ];
+        // Sikr at alle eksisterende steder har et subtopics-array
+        places.forEach(p => { if (!Array.isArray(p.subtopics)) p.subtopics = []; });
+
         let entries = JSON.parse(localStorage.getItem('tomrer_entries_v3')) || [];
 
         let selectedPlace = places[0] ? places[0].name : '';
+        let selectedSubtopic = '';
         let currentMinutes = 0;
-        let periodOffset = 0; // 0 = nuværende 14-dages blok (ulige + lige uge)
+        let editingEntryId = null;
+        let periodOffset = 0;
 
         const DA_DAYS = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
 
@@ -829,6 +992,10 @@
             t.textContent = msg;
             t.classList.remove('hidden');
             setTimeout(() => t.classList.add('hidden'), 2200);
+        }
+
+        function formatCombinedPlace(place, subtopic) {
+            return subtopic ? `${place} - ${subtopic}` : place;
         }
 
         // --- DATO & NORMTID LOGIK (Man-Tir=8t, Ons-Fre=7t) ---
@@ -861,19 +1028,16 @@
             return { year: d.getUTCFullYear(), week: weekNo };
         }
 
-        // Finder mandag i den ulige uge, så en 14-dages periode altid er [Ulige uge + Lige uge] og slutter i lige uge
         function getBiweeklyPeriodBounds(offsetBlocks) {
             const base = parseDateStr(document.getElementById('reg-date').value || toDateStr(new Date()));
-            const day = base.getDay() || 7; // 1..7 (Man..Søn)
+            const day = base.getDay() || 7;
             const monday = new Date(base);
             monday.setDate(base.getDate() - day + 1);
 
             const iso = getISOWeek(monday);
-            // Hvis ugen er lige (fx uge 44), så startede 14-dages perioden mandag i forrige uge (uge 43)
             if (iso.week % 2 === 0) {
                 monday.setDate(monday.getDate() - 7);
             }
-            // Forskyd med 14 dage pr. offset
             monday.setDate(monday.getDate() + (offsetBlocks * 14));
 
             const sundayEnd = new Date(monday);
@@ -895,6 +1059,13 @@
             });
             if (tab === 'period') renderPeriodView();
             if (tab === 'places') renderPlacesManager();
+        }
+
+        function jumpToDate(dateStr) {
+            document.getElementById('reg-date').value = dateStr;
+            switchTab('reg');
+            onDateChanged();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // --- DATO NAVIGATION ---
@@ -927,17 +1098,26 @@
             bar.style.width = pct + '%';
             bar.classList.toggle('done', usedHours >= norm && norm > 0);
 
-            // Opdater Fuld dag og Rest af dag knapper
-            const restHours = Math.max(0, norm - usedHours);
+            const usedExcludingEdited = entries
+                .filter(e => e.date === dateStr && e.id !== editingEntryId)
+                .reduce((sum, e) => sum + (e.minutes / 60), 0);
+
+            const restHours = Math.max(0, norm - usedExcludingEdited);
             document.getElementById('btn-full-day').textContent = `Sæt Fuld Dag (${norm}t)`;
             document.getElementById('btn-rest-day').textContent = `Rest af dag (${restHours.toFixed(2).replace('.00', '').replace('.', ',')}t)`;
 
             renderDayEntries();
         }
 
-        // --- STEDVÆLGER LOGIK ---
-        function selectPlace(name) {
+        // --- STED & UNDEREMNE VÆLGER LOGIK ---
+        function selectPlace(name, keepSubtopic = false) {
+            const changedPlace = (selectedPlace !== name);
             selectedPlace = name;
+            if (changedPlace && !keepSubtopic) {
+                selectedSubtopic = '';
+                document.getElementById('subtopic-input').value = '';
+            }
+
             const found = places.find(p => p.name.toLowerCase() === name.toLowerCase());
             if (found) {
                 found.lastUsed = Date.now();
@@ -948,14 +1128,64 @@
             renderPlaceSelector();
         }
 
-        function renderPlaceSelector() {
+        function selectSubtopic(sub) {
+            if (selectedSubtopic === sub) {
+                selectedSubtopic = '';
+                document.getElementById('subtopic-input').value = '';
+            } else {
+                selectedSubtopic = sub;
+                document.getElementById('subtopic-input').value = sub;
+            }
+            renderPlaceSelector();
+        }
+
+        function onSubtopicTyping() {
+            selectedSubtopic = document.getElementById('subtopic-input').value.trim();
+            updateBannerHeader();
+            // Opdater aktiv markering på chips uden at genbygge inputfeltet
+            const p = places.find(x => x.name === selectedPlace);
+            const chips = document.querySelectorAll('#subtopic-chips .sub-chip');
+            chips.forEach(c => {
+                c.classList.toggle('active', c.dataset.sub === selectedSubtopic);
+            });
+        }
+
+        function ensureSubtopicSavedOnPlace(placeName, subName) {
+            if (!placeName || !subName) return;
+            const p = places.find(x => x.name.toLowerCase() === placeName.toLowerCase());
+            if (!p) return;
+            if (!Array.isArray(p.subtopics)) p.subtopics = [];
+            const exists = p.subtopics.some(s => s.toLowerCase() === subName.toLowerCase());
+            if (!exists) {
+                p.subtopics.push(subName);
+                saveState();
+            }
+        }
+
+        function saveCurrentSubtopicToPlace() {
+            const val = document.getElementById('subtopic-input').value.trim();
+            if (!selectedPlace) {
+                alert('Vælg et sted først.');
+                return;
+            }
+            if (!val) {
+                alert('Skriv et underemne i feltet (f.eks. Hal B).');
+                return;
+            }
+            ensureSubtopicSavedOnPlace(selectedPlace, val);
+            selectedSubtopic = val;
+            renderPlaceSelector();
+            showToast(`"${val}" gemt under ${selectedPlace}`);
+        }
+
+        function updateBannerHeader() {
             const box = document.getElementById('selected-place-box');
             const text = document.getElementById('selected-place-text');
             const star = document.getElementById('selected-place-star');
 
             if (selectedPlace) {
                 box.classList.add('active');
-                text.textContent = selectedPlace;
+                text.textContent = formatCombinedPlace(selectedPlace, selectedSubtopic);
                 const p = places.find(x => x.name === selectedPlace);
                 star.textContent = (p && p.fav) ? '★' : '✓';
             } else {
@@ -963,8 +1193,11 @@
                 text.textContent = 'Ingen plads valgt endnu';
                 star.textContent = '';
             }
+        }
 
-            // Vis maks 6 hurtig-chips (Favoritter først, derefter senest brugte)
+        function renderPlaceSelector() {
+            updateBannerHeader();
+
             const activePlaces = places
                 .filter(p => !p.archived)
                 .sort((a, b) => (b.fav - a.fav) || ((b.lastUsed || 0) - (a.lastUsed || 0)))
@@ -980,6 +1213,37 @@
                 btn.onclick = () => selectPlace(p.name);
                 chipsContainer.appendChild(btn);
             });
+
+            // Vis underemner for det valgte sted
+            const subBox = document.getElementById('subtopic-section');
+            const subChips = document.getElementById('subtopic-chips');
+            const subLabel = document.getElementById('subtopic-place-label');
+
+            if (!selectedPlace) {
+                subBox.classList.add('hidden');
+                return;
+            }
+
+            subBox.classList.remove('hidden');
+            subLabel.textContent = selectedPlace;
+            subChips.innerHTML = '';
+
+            const pObj = places.find(x => x.name === selectedPlace);
+            const subs = (pObj && Array.isArray(pObj.subtopics)) ? pObj.subtopics : [];
+
+            if (subs.length === 0) {
+                subChips.innerHTML = `<span style="font-size:12px;color:var(--muted);">Ingen gemte underemner under ${selectedPlace} endnu. Skriv et herunder (f.eks. Hal B) – så husker appen det.</span>`;
+            } else {
+                subs.forEach(sub => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.dataset.sub = sub;
+                    b.className = 'chip sub-chip' + (selectedSubtopic === sub ? ' active' : '');
+                    b.textContent = sub;
+                    b.onclick = () => selectSubtopic(sub);
+                    subChips.appendChild(b);
+                });
+            }
         }
 
         function onSearchInput() {
@@ -989,9 +1253,10 @@
 
             drop.innerHTML = '';
             active.forEach(p => {
+                const subCount = (p.subtopics || []).length;
                 const item = document.createElement('div');
                 item.className = 'dropdown-item';
-                item.innerHTML = `<span>${p.fav ? '★ ' : ''}${p.name}</span><span style="font-size:11px;color:var(--muted);">Vælg</span>`;
+                item.innerHTML = `<span>${p.fav ? '★ ' : ''}${p.name}</span><span style="font-size:11px;color:var(--muted);">${subCount > 0 ? subCount + ' underemner' : 'Vælg'}</span>`;
                 item.onclick = () => selectPlace(p.name);
                 drop.appendChild(item);
             });
@@ -1001,7 +1266,7 @@
                 createItem.className = 'dropdown-item dropdown-create';
                 createItem.innerHTML = `<span>+ Opret og vælg "${q}"</span>`;
                 createItem.onclick = () => {
-                    places.push({ id: 'p_' + Date.now(), name: q, fav: false, archived: false, lastUsed: Date.now() });
+                    places.push({ id: 'p_' + Date.now(), name: q, fav: false, archived: false, lastUsed: Date.now(), subtopics: [] });
                     saveState();
                     selectPlace(q);
                     showToast(`Oprettede "${q}"`);
@@ -1043,7 +1308,7 @@
             const dateStr = document.getElementById('reg-date').value;
             const norm = getNormHours(dateStr);
             const usedMins = entries
-                .filter(e => e.date === dateStr)
+                .filter(e => e.date === dateStr && e.id !== editingEntryId)
                 .reduce((s, e) => s + e.minutes, 0);
             const rest = Math.max(0, (norm * 60) - usedMins);
             if (rest === 0) {
@@ -1065,10 +1330,56 @@
             document.getElementById('time-decimal').textContent = `${dec} decimaltimer til løn`;
         }
 
-        // --- GEM & SLET REGISTRERING ---
+        // --- START & ANNULLER REDIGERING ---
+        function startEditEntry(id) {
+            const entry = entries.find(e => e.id === id);
+            if (!entry) return;
+
+            editingEntryId = id;
+            document.getElementById('reg-date').value = entry.date;
+            selectedPlace = entry.place;
+            selectedSubtopic = entry.subtopic || '';
+            document.getElementById('subtopic-input').value = selectedSubtopic;
+            setMinutes(entry.minutes);
+            document.getElementById('reg-category').value = entry.category || 'Tømrerarbejde';
+            document.getElementById('reg-km').value = entry.km > 0 ? entry.km : '';
+            document.getElementById('reg-note').value = entry.note || '';
+
+            document.getElementById('edit-mode-banner').classList.remove('hidden');
+            document.getElementById('edit-banner-details').textContent = `${formatCombinedPlace(entry.place, entry.subtopic)} (${formatPrettyTime(entry.minutes)})`;
+            document.getElementById('time-card').classList.add('editing-mode');
+            document.getElementById('place-card').classList.add('editing-mode');
+
+            const saveBtn = document.getElementById('main-save-btn');
+            saveBtn.textContent = '✓ Gem Ændringer';
+            saveBtn.classList.add('editing');
+
+            renderPlaceSelector();
+            onDateChanged();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function cancelEdit() {
+            editingEntryId = null;
+            setMinutes(0);
+            document.getElementById('reg-km').value = '';
+            document.getElementById('reg-note').value = '';
+
+            document.getElementById('edit-mode-banner').classList.add('hidden');
+            document.getElementById('time-card').classList.remove('editing-mode');
+            document.getElementById('place-card').classList.remove('editing-mode');
+
+            const saveBtn = document.getElementById('main-save-btn');
+            saveBtn.textContent = '✓ Gem Timer på Stedet';
+            saveBtn.classList.remove('editing');
+
+            onDateChanged();
+        }
+
+        // --- GEM (NY ELLER REDIGERET) & SLET REGISTRERING ---
         function saveEntry() {
             if (!selectedPlace) {
-                alert('Vælg eller opret venligst en byggeplads først.');
+                alert('Vælg eller opret venligst et sted først.');
                 return;
             }
             if (currentMinutes <= 0) {
@@ -1076,33 +1387,65 @@
                 return;
             }
 
+            // Hvis brugeren har skrevet et underemne i feltet, gemmes det automatisk under stedet
+            const typedSub = document.getElementById('subtopic-input').value.trim();
+            const finalSubtopic = typedSub || selectedSubtopic || '';
+            if (finalSubtopic) {
+                ensureSubtopicSavedOnPlace(selectedPlace, finalSubtopic);
+            }
+
             const dateStr = document.getElementById('reg-date').value;
             const category = document.getElementById('reg-category').value;
             const km = parseFloat(document.getElementById('reg-km').value) || 0;
             const note = document.getElementById('reg-note').value.trim();
 
-            entries.unshift({
-                id: 'e_' + Date.now(),
-                date: dateStr,
-                place: selectedPlace,
-                minutes: currentMinutes,
-                category,
-                km,
-                note
-            });
-
-            saveState();
-            setMinutes(0);
-            document.getElementById('reg-km').value = '';
-            document.getElementById('reg-note').value = '';
-            onDateChanged();
-            showToast('Timer gemt!');
+            if (editingEntryId) {
+                const idx = entries.findIndex(e => e.id === editingEntryId);
+                if (idx !== -1) {
+                    entries[idx] = {
+                        ...entries[idx],
+                        date: dateStr,
+                        place: selectedPlace,
+                        subtopic: finalSubtopic,
+                        minutes: currentMinutes,
+                        category,
+                        km,
+                        note
+                    };
+                }
+                saveState();
+                cancelEdit();
+                renderPlaceSelector();
+                showToast('Ændringer gemt!');
+            } else {
+                entries.unshift({
+                    id: 'e_' + Date.now(),
+                    date: dateStr,
+                    place: selectedPlace,
+                    subtopic: finalSubtopic,
+                    minutes: currentMinutes,
+                    category,
+                    km,
+                    note
+                });
+                saveState();
+                setMinutes(0);
+                document.getElementById('reg-km').value = '';
+                document.getElementById('reg-note').value = '';
+                renderPlaceSelector();
+                onDateChanged();
+                showToast('Timer gemt!');
+            }
         }
 
         function deleteEntry(id) {
+            if (editingEntryId === id) {
+                cancelEdit();
+            }
             entries = entries.filter(e => e.id !== id);
             saveState();
             onDateChanged();
+            showToast('Slettet');
         }
 
         function renderDayEntries() {
@@ -1120,17 +1463,23 @@
 
             dayList.forEach(e => {
                 const dec = (e.minutes / 60).toFixed(2).replace('.', ',');
+                const isEdited = (e.id === editingEntryId);
                 const div = document.createElement('div');
-                div.className = 'entry-item';
+                div.className = 'entry-item' + (isEdited ? ' being-edited' : '');
                 div.innerHTML = `
-                    <div>
-                        <div class="entry-place">${e.place}</div>
+                    <div style="min-width:0;flex:1;">
+                        <div class="entry-place">
+                            ${e.place}
+                            ${e.subtopic ? `<span class="entry-subbadge">${e.subtopic}</span>` : ''}
+                            ${isEdited ? '<span style="color:#93c5fd;font-size:11px;">(Redigeres...)</span>' : ''}
+                        </div>
                         <div class="entry-meta">${e.category} • ${formatPrettyTime(e.minutes)}${e.km > 0 ? ' • ' + e.km + ' km' : ''}</div>
                         ${e.note ? `<div class="entry-note">"${e.note}"</div>` : ''}
                     </div>
                     <div class="entry-right">
                         <span class="entry-hours-badge">${dec} t</span>
-                        <button type="button" class="del-btn" onclick="deleteEntry('${e.id}')">✕</button>
+                        <button type="button" class="edit-btn" onclick="startEditEntry('${e.id}')">✎ Rediger</button>
+                        <button type="button" class="del-btn" onclick="deleteEntry('${e.id}')" title="Slet">✕</button>
                     </div>
                 `;
                 container.appendChild(div);
@@ -1168,21 +1517,26 @@
                 totalRegHours += dayHours;
 
                 dayEntries.forEach(e => {
-                    placeTotals[e.place] = (placeTotals[e.place] || 0) + (e.minutes / 60);
+                    const key = formatCombinedPlace(e.place, e.subtopic);
+                    placeTotals[key] = (placeTotals[key] || 0) + (e.minutes / 60);
                 });
 
-                const isEvenFriday = (i === 11); // Fredag i uge 2 (lige uge)
-                const placesText = dayEntries.map(e => `${e.place} (${(e.minutes/60).toFixed(2).replace('.', ',')}t)`).join(', ');
+                const isEvenFriday = (i === 11);
+                const placesText = dayEntries.map(e => `${formatCombinedPlace(e.place, e.subtopic)} (${(e.minutes/60).toFixed(2).replace('.', ',')}t)`).join(', ');
 
                 const row = document.createElement('div');
                 row.className = 'day-row' + (isEvenFriday ? ' friday-even' : '');
+                row.onclick = () => jumpToDate(dStr);
                 row.innerHTML = `
                     <div>
                         <div style="font-weight:700;">${DA_DAYS[cur.getDay()].slice(0,3)} d. ${cur.getDate()}/${cur.getMonth()+1} ${isEvenFriday ? '• <span style="color:var(--green);">Løn-fredag</span>' : ''}</div>
-                        <div style="font-size:11px;color:var(--muted);">${placesText || 'Ingen registreringer'}</div>
+                        <div style="font-size:11px;color:var(--muted);">${placesText || 'Tryk for at tilføje timer'}</div>
                     </div>
-                    <div style="text-align:right;font-weight:800;color:${dayHours >= norm && norm > 0 ? 'var(--green)' : (dayHours > 0 ? 'var(--amber)' : 'var(--muted)')};">
-                        ${dayHours.toFixed(2).replace('.', ',')} / ${norm}t
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="text-align:right;font-weight:800;color:${dayHours >= norm && norm > 0 ? 'var(--green)' : (dayHours > 0 ? 'var(--amber)' : 'var(--muted)')};">
+                            ${dayHours.toFixed(2).replace('.', ',')} / ${norm}t
+                        </span>
+                        <span style="color:var(--muted);font-size:12px;">✎</span>
                     </div>
                 `;
                 daysContainer.appendChild(row);
@@ -1195,28 +1549,29 @@
             diffEl.textContent = (diff >= 0 ? '+' : '') + diff.toFixed(2).replace('.', ',') + ' t';
             diffEl.style.color = diff >= 0 ? 'var(--green)' : '#f87171';
 
-            // Byggeplads opsummering
             const placeBox = document.getElementById('period-places-summary');
             placeBox.innerHTML = '';
             const placeKeys = Object.keys(placeTotals);
             if (placeKeys.length === 0) {
                 placeBox.innerHTML = `<div style="font-size:13px;color:var(--muted);text-align:center;padding:10px;">Ingen timer i denne 14-dages periode endnu.</div>`;
             } else {
-                placeKeys.forEach(place => {
+                placeKeys.forEach(key => {
                     const r = document.createElement('div');
                     r.className = 'day-row';
-                    r.innerHTML = `<span style="font-weight:700;">${place}</span><span style="font-weight:800;color:var(--amber);">${placeTotals[place].toFixed(2).replace('.', ',')} timer</span>`;
+                    r.style.cursor = 'default';
+                    r.innerHTML = `<span style="font-weight:700;">${key}</span><span style="font-weight:800;color:var(--amber);">${placeTotals[key].toFixed(2).replace('.', ',')} timer</span>`;
                     placeBox.appendChild(r);
                 });
             }
         }
 
-        // Download ægte Excel-kompatibel .xls fil med dansk formatering og tabeller
+        // --- OVERSKUELIG EXCEL EKSPORT MED BREDE KOLONNER OG SAMMENTÆLLING ---
         function downloadExcel14Days() {
             const bounds = getBiweeklyPeriodBounds(periodOffset);
             let rowsHtml = '';
             let totalHours = 0;
             let totalKm = 0;
+            const summaryByPlace = {};
 
             for (let i = 0; i < 14; i++) {
                 const cur = new Date(bounds.start);
@@ -1226,66 +1581,136 @@
                 const norm = getNormHours(dStr);
                 const dayEntries = entries.filter(e => e.date === dStr);
 
+                // Uge-skillelinje ved start på uge 1 og uge 2
+                if (i === 0 || i === 7) {
+                    rowsHtml += `
+                        <tr height="32" style="background:#e2e8f0;font-weight:bold;color:#0f172a;font-size:12pt;">
+                            <td colspan="10" style="padding:8px;">UGE ${wNo} (${wNo % 2 === 0 ? 'Lige uge' : 'Ulige uge'})</td>
+                        </tr>`;
+                }
+
                 if (dayEntries.length === 0 && norm > 0) {
                     rowsHtml += `
-                        <tr>
-                            <td>Uge ${wNo}</td>
+                        <tr height="28" style="color:#64748b;">
+                            <td align="center">Uge ${wNo}</td>
                             <td>${DA_DAYS[cur.getDay()]}</td>
-                            <td>${dStr}</td>
+                            <td align="center">${dStr}</td>
                             <td>-</td>
                             <td>-</td>
-                            <td style="text-align:right;">0,00</td>
-                            <td style="text-align:right;">${norm},00</td>
-                            <td style="text-align:right;">0</td>
-                            <td></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td align="right">0,00</td>
+                            <td align="right">${norm},00</td>
+                            <td align="right">0</td>
                         </tr>`;
                 } else {
                     dayEntries.forEach(e => {
                         const h = e.minutes / 60;
                         totalHours += h;
                         totalKm += (e.km || 0);
+                        const fullTitle = formatCombinedPlace(e.place, e.subtopic);
+                        summaryByPlace[fullTitle] = (summaryByPlace[fullTitle] || 0) + h;
+
                         rowsHtml += `
-                            <tr>
-                                <td>Uge ${wNo}</td>
-                                <td>${DA_DAYS[cur.getDay()]}</td>
-                                <td>${dStr}</td>
+                            <tr height="30">
+                                <td align="center">Uge ${wNo}</td>
+                                <td><b>${DA_DAYS[cur.getDay()]}</b></td>
+                                <td align="center">${dStr}</td>
                                 <td><b>${e.place}</b></td>
-                                <td>${e.category}</td>
-                                <td style="text-align:right;">${h.toFixed(2).replace('.', ',')}</td>
-                                <td style="text-align:right;">${norm},00</td>
-                                <td style="text-align:right;">${e.km || 0}</td>
-                                <td>${e.note || ''}</td>
+                                <td><b>${e.subtopic || '-'}</b></td>
+                                <td style="background:#f8fafc;"><b>${fullTitle}</b></td>
+                                <td>${e.category}${e.note ? ' (' + e.note + ')' : ''}</td>
+                                <td align="right" style="font-weight:bold;font-size:11pt;">${h.toFixed(2).replace('.', ',')}</td>
+                                <td align="right" style="color:#475569;">${norm},00</td>
+                                <td align="right">${e.km || 0}</td>
                             </tr>`;
                     });
                 }
             }
 
+            let summaryRowsHtml = '';
+            Object.keys(summaryByPlace).forEach(fullTitle => {
+                summaryRowsHtml += `
+                    <tr height="28">
+                        <td colspan="6"><b>${fullTitle}</b></td>
+                        <td colspan="2" align="right" style="font-weight:bold;font-size:11pt;">${summaryByPlace[fullTitle].toFixed(2).replace('.', ',')} timer</td>
+                        <td colspan="2"></td>
+                    </tr>`;
+            });
+
             const excelTemplate = `
                 <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-                <head><meta charset="UTF-8"></head>
+                <head>
+                    <meta charset="UTF-8">
+                    <!--[if gte mso 9]>
+                    <xml>
+                        <x:ExcelWorkbook>
+                            <x:ExcelWorksheets>
+                                <x:ExcelWorksheet>
+                                    <x:Name>Uge ${bounds.week1}-${bounds.week2}</x:Name>
+                                    <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>
+                                </x:ExcelWorksheet>
+                            </x:ExcelWorksheets>
+                        </x:ExcelWorkbook>
+                    </xml>
+                    <![endif]-->
+                    <style>
+                        body, table { font-family: Calibri, Arial, sans-serif; font-size: 11pt; }
+                        td, th { padding: 7px 12px; vertical-align: middle; border: 1px solid #cbd5e1; }
+                        th { background-color: #1e293b; color: #ffffff; font-weight: bold; font-size: 11pt; }
+                    </style>
+                </head>
                 <body>
-                    <h2>14-Dages Tømrer Timeregnskab (Uge ${bounds.week1} + Uge ${bounds.week2})</h2>
-                    <p>Normtid: Mandag-Tirsdag 8 timer | Onsdag-Fredag 7 timer (74 timer pr. 14 dage)</p>
-                    <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;font-family:Calibri,sans-serif;">
-                        <tr style="background:#1e293b;color:#ffffff;font-weight:bold;">
-                            <th>Uge</th>
-                            <th>Ugedag</th>
-                            <th>Dato</th>
-                            <th>Byggeplads / Sted</th>
-                            <th>Kategori</th>
-                            <th>Timer</th>
-                            <th>Dagsnorm</th>
-                            <th>Kørsel (km)</th>
-                            <th>Bemærkning</th>
+                    <h2 style="font-family:Calibri,sans-serif;margin-bottom:4px;">14-Dages Tømrer Timeregnskab – Uge ${bounds.week1} & Uge ${bounds.week2}</h2>
+                    <p style="font-family:Calibri,sans-serif;color:#475569;margin-top:0;">Faste normtimer: Mandag–Tirsdag 8,00 timer | Onsdag–Fredag 7,00 timer (74,00 timer pr. 14 dage)</p>
+
+                    <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;table-layout:fixed;">
+                        <colgroup>
+                            <col width="95">
+                            <col width="125">
+                            <col width="120">
+                            <col width="210">
+                            <col width="190">
+                            <col width="290">
+                            <col width="270">
+                            <col width="130">
+                            <col width="130">
+                            <col width="120">
+                        </colgroup>
+                        <thead>
+                            <tr height="38">
+                                <th width="95">Uge</th>
+                                <th width="125">Ugedag</th>
+                                <th width="120">Dato</th>
+                                <th width="210">Sted / Kunde</th>
+                                <th width="190">Underemne / Hal</th>
+                                <th width="290">Samlet Sted & Underemne</th>
+                                <th width="270">Arbejdstype & Bemærkning</th>
+                                <th width="130">Timer (t)</th>
+                                <th width="130">Dagsnorm (t)</th>
+                                <th width="120">Kørsel (km)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rowsHtml}
+                            <tr height="36" style="background:#fef3c7;font-weight:bold;font-size:12pt;">
+                                <td colspan="7" align="right">SAMLET FOR 14-DAGES PERIODEN:</td>
+                                <td align="right">${totalHours.toFixed(2).replace('.', ',')}</td>
+                                <td align="right">74,00</td>
+                                <td align="right">${totalKm}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <br><br>
+                    <h3 style="font-family:Calibri,sans-serif;">Sammentælling pr. Sted & Underemne (Uge ${bounds.week1} + ${bounds.week2})</h3>
+                    <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;">
+                        <tr height="34" style="background:#1e293b;color:#ffffff;font-weight:bold;">
+                            <th colspan="6" align="left">Sted - Underemne</th>
+                            <th colspan="2" align="right">Samlede Timer</th>
+                            <th colspan="2"></th>
                         </tr>
-                        ${rowsHtml}
-                        <tr style="background:#fef3c7;font-weight:bold;">
-                            <td colspan="5" style="text-align:right;">SAMLET I 14-DAGES PERIODEN:</td>
-                            <td style="text-align:right;">${totalHours.toFixed(2).replace('.', ',')}</td>
-                            <td style="text-align:right;">74,00</td>
-                            <td style="text-align:right;">${totalKm}</td>
-                            <td></td>
-                        </tr>
+                        ${summaryRowsHtml}
                     </table>
                 </body>
                 </html>`;
@@ -1317,7 +1742,8 @@
                     const h = e.minutes / 60;
                     sum += h;
                     sumKm += (e.km || 0);
-                    txt += `${DA_DAYS[cur.getDay()].slice(0,3)} ${cur.getDate()}/${cur.getMonth()+1}: ${e.place} - ${h.toFixed(2).replace('.', ',')}t (${e.category})${e.km ? ' ['+e.km+' km]' : ''}\n`;
+                    const full = formatCombinedPlace(e.place, e.subtopic);
+                    txt += `${DA_DAYS[cur.getDay()].slice(0,3)} ${cur.getDate()}/${cur.getMonth()+1}: ${full} - ${h.toFixed(2).replace('.', ',')}t (${e.category})${e.km ? ' ['+e.km+' km]' : ''}\n`;
                 });
             }
             txt += `----------------------------------\n`;
@@ -1328,17 +1754,48 @@
             showToast('Kopieret til udklipsholder!');
         }
 
-        // --- STEDER & ARKIV STYRING ---
+        // --- STEDER, UNDEREMNER & ARKIV STYRING ---
         function addNewPlaceFromInput() {
             const inp = document.getElementById('new-place-input');
             const name = inp.value.trim();
             if (!name) return;
-            places.push({ id: 'p_' + Date.now(), name, fav: false, archived: false, lastUsed: Date.now() });
+            places.push({ id: 'p_' + Date.now(), name, fav: false, archived: false, lastUsed: Date.now(), subtopics: [] });
             inp.value = '';
             saveState();
             renderPlacesManager();
             renderPlaceSelector();
             showToast('Sted oprettet!');
+        }
+
+        function addSubtopicInManager(placeId) {
+            const inp = document.getElementById('mgr-sub-inp-' + placeId);
+            if (!inp) return;
+            const val = inp.value.trim();
+            if (!val) return;
+            const p = places.find(x => x.id === placeId);
+            if (p) {
+                if (!Array.isArray(p.subtopics)) p.subtopics = [];
+                if (!p.subtopics.some(s => s.toLowerCase() === val.toLowerCase())) {
+                    p.subtopics.push(val);
+                    saveState();
+                }
+            }
+            inp.value = '';
+            renderPlacesManager();
+            renderPlaceSelector();
+            showToast(`Tilføjede "${val}"`);
+        }
+
+        function removeSubtopicFromPlace(placeId, subName) {
+            const p = places.find(x => x.id === placeId);
+            if (!p || !Array.isArray(p.subtopics)) return;
+            p.subtopics = p.subtopics.filter(s => s !== subName);
+            if (selectedPlace === p.name && selectedSubtopic === subName) {
+                selectedSubtopic = '';
+            }
+            saveState();
+            renderPlacesManager();
+            renderPlaceSelector();
         }
 
         function toggleFav(id) {
@@ -1364,14 +1821,31 @@
             archBox.innerHTML = '';
 
             places.filter(p => !p.archived).forEach(p => {
+                const subs = Array.isArray(p.subtopics) ? p.subtopics : [];
+                const subsHtml = subs.map(s => `
+                    <span class="chip" style="padding:4px 9px;font-size:11px;">
+                        ${s}
+                        <button type="button" onclick="removeSubtopicFromPlace('${p.id}', '${s.replace(/'/g, "\\'")}')" style="background:none;border:none;color:var(--muted);margin-left:4px;cursor:pointer;font-weight:bold;">✕</button>
+                    </span>
+                `).join('');
+
                 const div = document.createElement('div');
-                div.className = 'entry-item';
+                div.className = 'place-card-item';
                 div.innerHTML = `
-                    <div style="display:flex;align-items:center;gap:10px;">
-                        <button type="button" onclick="toggleFav('${p.id}')" style="background:none;border:none;font-size:20px;cursor:pointer;color:${p.fav ? 'var(--amber)' : 'var(--muted)'};">★</button>
-                        <span style="font-weight:700;font-size:14px;">${p.name}</span>
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <button type="button" onclick="toggleFav('${p.id}')" style="background:none;border:none;font-size:20px;cursor:pointer;color:${p.fav ? 'var(--amber)' : 'var(--muted)'};">★</button>
+                            <span style="font-weight:800;font-size:15px;">${p.name}</span>
+                        </div>
+                        <button type="button" onclick="toggleArchive('${p.id}')" style="background:var(--card);border:1px solid var(--border);color:var(--muted);padding:6px 10px;border-radius:8px;font-size:12px;cursor:pointer;">Arkivér</button>
                     </div>
-                    <button type="button" onclick="toggleArchive('${p.id}')" style="background:var(--card);border:1px solid var(--border);color:var(--muted);padding:6px 10px;border-radius:8px;font-size:12px;cursor:pointer;">Arkivér</button>
+                    <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;">
+                        ${subsHtml || '<span style="font-size:11px;color:var(--muted);">Ingen underemner endnu</span>'}
+                    </div>
+                    <div style="display:flex;gap:6px;margin-top:8px;">
+                        <input type="text" id="mgr-sub-inp-${p.id}" class="input-text" style="padding:7px 10px;font-size:12px;" placeholder="Tilføj underemne til ${p.name} (f.eks. Hal B)...">
+                        <button type="button" onclick="addSubtopicInManager('${p.id}')" style="background:#273549;color:var(--amber);border:1px solid #475569;padding:0 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">+ Tilføj</button>
+                    </div>
                 `;
                 activeBox.appendChild(div);
             });
